@@ -3,9 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.configuration.ServoFlavor;
 
-public class Intake2 {
+public class Intake {
     private final DcMotor intake;
     private final CRServo transfer;
 
@@ -13,7 +12,7 @@ public class Intake2 {
     private double maxPower = 1.0;
     private double transferSpeed = 0.75;
 
-    public Intake2(HardwareMap hardwareMap, String intake, String transfer) {
+    public Intake(HardwareMap hardwareMap, String intake, String transfer) {
         this.intake = hardwareMap.get(DcMotor.class, intake);
         this.transfer = hardwareMap.get(CRServo.class, transfer);
     }

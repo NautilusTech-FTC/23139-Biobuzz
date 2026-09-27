@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 @Autonomous
-public class JankyUI extends OpMode {
+public class RobotConfig extends OpMode {
     Robot.alliances alSelect;
     Robot.drives dSelect;
     Robot.startPositions sSelect;
