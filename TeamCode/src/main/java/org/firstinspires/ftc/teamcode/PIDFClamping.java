@@ -1,15 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class PIDClamping {
-    private DcMotor motor;
+public class PIDFClamping {
+    private DcMotorEx motor;
 
     private double p;
     private double i;
     private double d;
+    private double f;
 
     private double error;
     private double lastError;
@@ -28,15 +29,16 @@ public class PIDClamping {
 
     ElapsedTime timer = new ElapsedTime();
 
-    public PIDClamping(HardwareMap hardwareMap, String motor, DcMotor.RunMode runMode) {
-        this.motor = hardwareMap.get(DcMotor.class, motor);
+    public PIDFClamping(HardwareMap hardwareMap, String motor, DcMotorEx.RunMode runMode) {
+        this.motor = hardwareMap.get(DcMotorEx.class, motor);
         this.motor.setMode(runMode);
     }
 
-    public void setPID(double p, double i, double d) {
+    public void setPIDF(double p, double i, double d, double f) {
         this.p = p;
         this.i = i;
         this.d = d;
+        this.f = f;
     }
 
     public void setTarget(double target) {
@@ -51,15 +53,11 @@ public class PIDClamping {
         this.minOut = minOut;
     }
 
-    public double getPosition() {
-        return(motor.getCurrentPosition());
+    public double getVelocity() {
+        return(motor.getVelocity());
     }
 
-    public double getPower() {
-        return(motor.getPower());
-    }
-
-    public void runPID(double value) {
+    public void runPIDF(double value) {
         double time = timer.seconds();
 
         error = target - value;
@@ -69,7 +67,7 @@ public class PIDClamping {
             integral = 0;
         }
 
-        rawOut = (p * error) + (i * integral) + (d * derivative);
+        rawOut = (p * error) + (i * integral) + (d * derivative) + (f * target);
 
         if (rawOut >= maxOut && error > 0) {}
         else if (rawOut <= minOut && error < 0) {}

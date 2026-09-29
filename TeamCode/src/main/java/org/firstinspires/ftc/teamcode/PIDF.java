@@ -1,15 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class PID {
-    private DcMotor motor;
+public class PIDF {
+    private DcMotorEx motor;
 
     private double p;
     private double i;
     private double d;
+    private double f;
 
     private double error;
     private double lastError;
@@ -26,15 +27,16 @@ public class PID {
 
     ElapsedTime timer = new ElapsedTime();
 
-    public PID(HardwareMap hardwareMap, String motor, DcMotor.RunMode runMode) {
-        this.motor = hardwareMap.get(DcMotor.class, motor);
+    public PIDF(HardwareMap hardwareMap, String motor, DcMotorEx.RunMode runMode) {
+        this.motor = hardwareMap.get(DcMotorEx.class, motor);
         this.motor.setMode(runMode);
     }
 
-    public void setPID(double p, double i, double d) {
+    public void setPIDF(double p, double i, double d, double f) {
         this.p = p;
         this.i = i;
         this.d = d;
+        this.f = f;
     }
 
     public void setTarget(double target) {
@@ -45,15 +47,11 @@ public class PID {
         integralLim = limit;
     }
 
-    public double getPosition() {
-        return(motor.getCurrentPosition());
+    public double getVelocity() {
+        return(motor.getVelocity());
     }
 
-    public double getPower() {
-        return(motor.getPower());
-    }
-
-    public void runPID(double value) {
+    public void runPIDF(double value) {
         error = target - value;
         derivative = (error - lastError) / timer.seconds();
         integral = integral + (error * timer.seconds());
@@ -69,7 +67,7 @@ public class PID {
             integral = 0;
         }
 
-        output = (p * error) + (i * integral) + (d * derivative);
+        output = (p * error) + (i * integral) + (d * derivative) + (f * target);
         motor.setPower(output);
 
         lastError = error;

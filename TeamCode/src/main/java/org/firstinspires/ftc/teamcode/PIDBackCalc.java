@@ -4,12 +4,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class PIDClamping {
+public class PIDBackCalc {
     private DcMotor motor;
 
     private double p;
     private double i;
     private double d;
+    private double b;
 
     private double error;
     private double lastError;
@@ -28,7 +29,7 @@ public class PIDClamping {
 
     ElapsedTime timer = new ElapsedTime();
 
-    public PIDClamping(HardwareMap hardwareMap, String motor, DcMotor.RunMode runMode) {
+    public PIDBackCalc(HardwareMap hardwareMap, String motor, DcMotor.RunMode runMode) {
         this.motor = hardwareMap.get(DcMotor.class, motor);
         this.motor.setMode(runMode);
     }
@@ -37,6 +38,10 @@ public class PIDClamping {
         this.p = p;
         this.i = i;
         this.d = d;
+    }
+
+    public void setBackCalcGain(double b) {
+        this.b = b;
     }
 
     public void setTarget(double target) {
@@ -71,11 +76,10 @@ public class PIDClamping {
 
         rawOut = (p * error) + (i * integral) + (d * derivative);
 
-        if (rawOut >= maxOut && error > 0) {}
-        else if (rawOut <= minOut && error < 0) {}
-        else {integral = integral + (error * time);}
-
         output = Math.max(minOut, Math.min(maxOut, rawOut));
+
+        integral = integral + (error * time) + (b * (output - rawOut) * time);
+
         motor.setPower(output);
 
         lastError = error;
