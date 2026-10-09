@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.vision.apriltag.AprilTagSingleDetection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,10 @@ public class AprilTag {
 
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
+
+    List<Integer> tagIds = new ArrayList<>();
+    List<Integer> redIds = new ArrayList<>(List.of(30, 31, 32, 33, 34, 35, 36, 37));
+    List<Integer> blueIds = new ArrayList<>(List.of(38, 39, 40, 41, 42, 43, 44, 45));
 
     public void init (HardwareMap hardwareMap) {
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "WebcamLogitech");
@@ -39,15 +44,28 @@ public class AprilTag {
         builder.addProcessor(aprilTag);
 
         visionPortal = builder.build();
+
+        if (Robot.Infoz.alliance == Robot.alliances.BLUE_ALLIANCE) {
+            tagIds = blueIds;
+        } else {
+            tagIds = redIds;
+        }
     }
 
-    public void checkHiveTip () {
+    //Returns true if the robot is on the correct side to shoot from (ie can see the april tags)
+     public boolean checkHiveTip () {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
 
-        List<Integer> tagIds = new ArrayList<>();
         for (AprilTagDetection detection : currentDetections) {
+            if (detection instanceof AprilTagSingleDetection) {
+                AprilTagSingleDetection tag = (AprilTagSingleDetection) detection;
 
+                if (tagIds.contains(tag.id)) {
+                    return true;
+                }
+            }
         }
 
+        return false;
     }
 }
