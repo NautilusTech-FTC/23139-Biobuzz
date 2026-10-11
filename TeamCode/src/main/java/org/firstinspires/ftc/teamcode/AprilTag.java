@@ -10,25 +10,28 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagClusterDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.firstinspires.ftc.vision.apriltag.AprilTagSingleDetection;
+import org.opencv.core.Mat;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AprilTag {
     private Position cameraPosition = new Position(DistanceUnit.INCH,
             0, 0, 0, 0);
     private YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
-            0, 0, 0, 0);
+            0, -90, 0, 0);
 
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
 
-    List<Integer> tagIds = new ArrayList<>();
-    List<Integer> redIds = new ArrayList<>(List.of(30, 31, 32, 33, 34, 35, 36, 37));
-    List<Integer> blueIds = new ArrayList<>(List.of(38, 39, 40, 41, 42, 43, 44, 45));
+    public enum hiveTip {
+        AUDIENCE_SIDE_UP,
+        SCORING_SIDE_UP
+    }
+
+    public hiveTip currentTip;
 
     public void init (HardwareMap hardwareMap) {
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "WebcamLogitech");
@@ -44,28 +47,56 @@ public class AprilTag {
         builder.addProcessor(aprilTag);
 
         visionPortal = builder.build();
-
-        if (Robot.Infoz.alliance == Robot.alliances.BLUE_ALLIANCE) {
-            tagIds = blueIds;
-        } else {
-            tagIds = redIds;
-        }
     }
 
     //Returns true if the robot is on the correct side to shoot from (ie can see the april tags)
-     public boolean checkHiveTip () {
+     public boolean checkHiveShootability () {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
 
         for (AprilTagDetection detection : currentDetections) {
-            if (detection instanceof AprilTagSingleDetection) {
-                AprilTagSingleDetection tag = (AprilTagSingleDetection) detection;
+            if (detection instanceof AprilTagClusterDetection) {
+                AprilTagClusterDetection tag = (AprilTagClusterDetection) detection;
 
-                if (tagIds.contains(tag.id)) {
+                if ((Robot.Infoz.alliance == Robot.alliances.BLUE_ALLIANCE) && (tag.metadata.name.charAt(0) == 'B')) {
+                    return true;
+                }
+
+                if ((Robot.Infoz.alliance == Robot.alliances.RED_ALLIANCE) && (tag.metadata.name.charAt(0) == 'R')) {
                     return true;
                 }
             }
         }
 
         return false;
+    }
+
+    public void setHiveTip () {
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection instanceof AprilTagClusterDetection) {
+                AprilTagClusterDetection tag = (AprilTagClusterDetection) detection;
+
+                if ((Robot.Infoz.alliance == Robot.alliances.BLUE_ALLIANCE) && (tag.metadata.name.equals("BLUE AUDIENCE")) && (Math.abs(tag.ftcPose.roll) < 90)) {
+                    currentTip = hiveTip.AUDIENCE_SIDE_UP;
+                } else if ((Robot.Infoz.alliance == Robot.alliances.BLUE_ALLIANCE) && tag.metadata.name.equals("BLUE AUDIENCE")) {
+                    currentTip = hiveTip.SCORING_SIDE_UP;
+                } else if ((Robot.Infoz.alliance == Robot.alliances.BLUE_ALLIANCE) && (Math.abs(tag.ftcPose.roll) < 90)) {
+                    currentTip = hiveTip.SCORING_SIDE_UP;
+                } else if (Robot.Infoz.alliance == Robot.alliances.BLUE_ALLIANCE) {
+                    currentTip = hiveTip.AUDIENCE_SIDE_UP;
+                }
+
+                if ((Robot.Infoz.alliance == Robot.alliances.RED_ALLIANCE) && (tag.metadata.name.equals("RED AUDIENCE")) && (Math.abs(tag.ftcPose.roll) < 90)) {
+                    currentTip = hiveTip.AUDIENCE_SIDE_UP;
+                } else if ((Robot.Infoz.alliance == Robot.alliances.RED_ALLIANCE) && tag.metadata.name.equals("RED AUDIENCE")) {
+                    currentTip = hiveTip.SCORING_SIDE_UP;
+                } else if ((Robot.Infoz.alliance == Robot.alliances.RED_ALLIANCE) && (Math.abs(tag.ftcPose.roll) < 90)) {
+                    currentTip = hiveTip.SCORING_SIDE_UP;
+                } else if (Robot.Infoz.alliance == Robot.alliances.RED_ALLIANCE) {
+                    currentTip = hiveTip.AUDIENCE_SIDE_UP;
+                }
+            }
+        }
     }
 }
