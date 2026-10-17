@@ -8,8 +8,7 @@ public class Intake {
     private final DcMotor intake;
     private final CRServo transfer;
 
-    private double minPower = 0.1;
-    private double maxPower = 1.0;
+    private double power = 1.0;
     private double transferSpeed = 0.75;
 
     public Intake(HardwareMap hardwareMap, String intake, String transfer) {
@@ -17,25 +16,21 @@ public class Intake {
         this.transfer = hardwareMap.get(CRServo.class, transfer);
     }
 
-    public void setMinPower(double minPower) {
-        this.minPower = minPower;
-    }
-
-    public void setMaxPower(double maxPower) {
-        this.maxPower = maxPower;
+    public void setIntakePower(double maxPower) {
+        this.power = maxPower;
     }
 
     public void setTransferSpeed(double transferSpeed) {
         this.transferSpeed = transferSpeed;
     }
 
-    public void intakeTransfer(boolean in, boolean out, double brakes) {
+    public void intakeTransfer(boolean in, boolean out) {
 
         if (in && !out) {
-            intake.setPower(Math.min(-maxPower + brakes, -minPower));
+            intake.setPower(-power);
             transfer.setPower(-transferSpeed);
         } else if (out && !in) {
-            intake.setPower(Math.max(maxPower - brakes, minPower));
+            intake.setPower(power);
             transfer.setPower(transferSpeed);
         } else {
             intake.setPower(0);
