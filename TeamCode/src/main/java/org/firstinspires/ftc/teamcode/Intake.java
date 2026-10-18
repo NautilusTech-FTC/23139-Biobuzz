@@ -8,8 +8,9 @@ public class Intake {
 
     private double power = 1.0;
 
-    public Intake(HardwareMap hardwareMap, String intake) {
+    public Intake(HardwareMap hardwareMap, String intake, DcMotor.Direction direction) {
         this.intake = hardwareMap.get(DcMotor.class, intake);
+        this.intake.setDirection(direction);
     }
 
     public void setIntakePower(double maxPower) {

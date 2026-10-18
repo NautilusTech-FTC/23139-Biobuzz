@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class DriveTrain {
@@ -15,7 +14,7 @@ public class DriveTrain {
     public DriveTrain(
             HardwareMap hardwareMap,
             String fL, String fR, String bR, String bL,
-            DcMotorSimple.Direction fLDir, DcMotorSimple.Direction fRDir, DcMotorSimple.Direction bRDir, DcMotorSimple.Direction bLDir) {
+            DcMotor.Direction fLDir, DcMotor.Direction fRDir, DcMotor.Direction bRDir, DcMotor.Direction bLDir) {
         this.fL = hardwareMap.get(DcMotor.class, fL);
         this.fR = hardwareMap.get(DcMotor.class, fR);
         this.bR = hardwareMap.get(DcMotor.class, bR);

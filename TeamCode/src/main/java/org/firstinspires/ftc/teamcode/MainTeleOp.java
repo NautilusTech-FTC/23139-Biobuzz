@@ -10,7 +10,7 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
 public class MainTeleOp extends OpMode {
     private DriveTrain drive;
     private Intake intake;
-    private Transfer transfer;
+    private Intake transfer;
     private Shooter shooter;
 
     double lSY;
@@ -31,8 +31,8 @@ public class MainTeleOp extends OpMode {
                 "Motor0", "Motor1", "Motor2", "Motor3",
                 REVERSE, FORWARD, FORWARD, REVERSE);
 
-        intake = new Intake(hardwareMap, "IntakeMotor");
-        transfer = new Transfer(hardwareMap, "TransferMotor");
+        intake = new Intake(hardwareMap, "IntakeMotor", FORWARD);
+        transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
         shooter = new Shooter(hardwareMap, "ShooterMotor", RUN_USING_ENCODER, FORWARD);
     }
 
