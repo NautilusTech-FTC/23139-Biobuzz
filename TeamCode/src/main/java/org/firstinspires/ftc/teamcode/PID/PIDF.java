@@ -1,17 +1,16 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.PID;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class PIDFBackCalc {
+public class PIDF {
     private DcMotorEx motor;
 
     private double p;
     private double i;
     private double d;
     private double f;
-    private double b;
 
     private double error;
     private double lastError;
@@ -20,17 +19,15 @@ public class PIDFBackCalc {
     private double lastTarget;
 
     private double integral;
+    private double integralLim;
 
     private double derivative;
 
-    private double maxOut = 1.0;
-    private double minOut = -1.0;
-    private double rawOut;
     private double output;
 
     ElapsedTime timer = new ElapsedTime();
 
-    public PIDFBackCalc(HardwareMap hardwareMap, String motor, DcMotorEx.RunMode runMode) {
+    public PIDF(HardwareMap hardwareMap, String motor, DcMotorEx.RunMode runMode) {
         this.motor = hardwareMap.get(DcMotorEx.class, motor);
         this.motor.setMode(runMode);
     }
@@ -42,20 +39,12 @@ public class PIDFBackCalc {
         this.f = f;
     }
 
-    public void setBackCalcGain(double b) {
-        this.b = b;
-    }
-
     public void setTarget(double target) {
         this.target = target;
     }
 
-    public void setMaxOut(double maxOut) {
-        this.maxOut = maxOut;
-    }
-
-    public void setMinOut(double minOut) {
-        this.minOut = minOut;
+    public void setIntegralLim(double limit) {
+        integralLim = limit;
     }
 
     public double getVelocity() {
@@ -63,21 +52,22 @@ public class PIDFBackCalc {
     }
 
     public void runPIDF(double value) {
-        double time = timer.seconds();
-
         error = target - value;
-        derivative = (error - lastError) / time;
+        derivative = (error - lastError) / timer.seconds();
+        integral = integral + (error * timer.seconds());
+
+        if (integral > integralLim) {
+            integral = integralLim;
+        }
+        if (integral < -integralLim) {
+            integral = -integralLim;
+        }
 
         if (target != lastTarget) {
             integral = 0;
         }
 
-        rawOut = (p * error) + (i * integral) + (d * derivative) + (f * target);
-
-        output = Math.max(minOut, Math.min(maxOut, rawOut));
-
-        integral = integral + (error * time) + (b * (output - rawOut) * time);
-
+        output = (p * error) + (i * integral) + (d * derivative) + (f * target);
         motor.setPower(output);
 
         lastError = error;

@@ -1,16 +1,16 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.PID;
 
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class PIDFClamping {
-    private DcMotorEx motor;
+public class PIDBackCalc {
+    private DcMotor motor;
 
     private double p;
     private double i;
     private double d;
-    private double f;
+    private double b;
 
     private double error;
     private double lastError;
@@ -29,16 +29,19 @@ public class PIDFClamping {
 
     ElapsedTime timer = new ElapsedTime();
 
-    public PIDFClamping(HardwareMap hardwareMap, String motor, DcMotorEx.RunMode runMode) {
-        this.motor = hardwareMap.get(DcMotorEx.class, motor);
+    public PIDBackCalc(HardwareMap hardwareMap, String motor, DcMotor.RunMode runMode) {
+        this.motor = hardwareMap.get(DcMotor.class, motor);
         this.motor.setMode(runMode);
     }
 
-    public void setPIDF(double p, double i, double d, double f) {
+    public void setPID(double p, double i, double d) {
         this.p = p;
         this.i = i;
         this.d = d;
-        this.f = f;
+    }
+
+    public void setBackCalcGain(double b) {
+        this.b = b;
     }
 
     public void setTarget(double target) {
@@ -53,11 +56,15 @@ public class PIDFClamping {
         this.minOut = minOut;
     }
 
-    public double getVelocity() {
-        return(motor.getVelocity());
+    public double getPosition() {
+        return(motor.getCurrentPosition());
     }
 
-    public void runPIDF(double value) {
+    public double getPower() {
+        return(motor.getPower());
+    }
+
+    public void runPID(double value) {
         double time = timer.seconds();
 
         error = target - value;
@@ -67,13 +74,12 @@ public class PIDFClamping {
             integral = 0;
         }
 
-        rawOut = (p * error) + (i * integral) + (d * derivative) + (f * target);
-
-        if (rawOut >= maxOut && error > 0) {}
-        else if (rawOut <= minOut && error < 0) {}
-        else {integral = integral + (error * time);}
+        rawOut = (p * error) + (i * integral) + (d * derivative);
 
         output = Math.max(minOut, Math.min(maxOut, rawOut));
+
+        integral = integral + (error * time) + (b * (output - rawOut) * time);
+
         motor.setPower(output);
 
         lastError = error;
