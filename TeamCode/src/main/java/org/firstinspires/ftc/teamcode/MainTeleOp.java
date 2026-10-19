@@ -18,8 +18,10 @@ public class MainTeleOp extends OpMode {
     double rSX;
 
     double rT;
-    boolean lB;
-    boolean rB;
+    boolean lB1;
+    boolean rB1;
+    boolean lB2;
+    boolean rB2;
 
     boolean x;
     boolean y;
@@ -33,13 +35,14 @@ public class MainTeleOp extends OpMode {
 
         intake = new Intake(hardwareMap, "IntakeMotor", FORWARD);
         transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
-        shooter = new Shooter(hardwareMap, "ShooterMotor", RUN_USING_ENCODER, FORWARD);
+        shooter = new Shooter(hardwareMap, "ShooterMotor", "ShooterFlap", RUN_USING_ENCODER, FORWARD);
     }
 
     public void loop() {
         ctrlVars();
 
-        intake.intake(lB, rB);
+        intake.intake(lB1, rB1);
+        transfer.intake(lB2, rB2);
         drive.operate(lSY, lSX, rSX, rT);
         shooter.shoot(x, y, b);
     }
@@ -49,8 +52,10 @@ public class MainTeleOp extends OpMode {
         lSX = gamepad1.left_stick_x;
         rSX = gamepad1.right_stick_x;
         rT = gamepad1.right_trigger;
-        lB = gamepad2.left_bumper;
-        rB = gamepad2.right_bumper;
+        lB1 = gamepad1.left_bumper;
+        rB1 = gamepad1.right_bumper;
+        lB2 = gamepad2.left_bumper;
+        rB2 = gamepad2.right_bumper;
         x = gamepad2.x;
         y = gamepad2.y;
         b = gamepad2.b;

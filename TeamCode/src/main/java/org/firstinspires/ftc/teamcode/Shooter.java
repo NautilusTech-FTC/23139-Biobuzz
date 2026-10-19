@@ -2,19 +2,24 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class Shooter {
-    private DcMotorEx shooter;
+    private final DcMotorEx shooter;
+    private final Servo flap;
 
     private double targetVelocity = 1650;
     private boolean shooterOn = false;
 
-    public Shooter(HardwareMap hardwareMap, String shooter,
+    public Shooter(HardwareMap hardwareMap,
+                   String shooter, String flap,
                    DcMotorEx.RunMode runMode,
                    DcMotorEx.Direction direction) {
         this.shooter = hardwareMap.get(DcMotorEx.class, shooter);
         this.shooter.setMode(runMode);
         this.shooter.setDirection(direction);
+
+        this.flap = hardwareMap.get(Servo.class, flap);
     }
 
     public void setTargetVelocity(double velocity) {
@@ -28,7 +33,7 @@ public class Shooter {
         }
 
         if (shoot && shooterOn) {
-            //do some shooting code;
+
         }
 
         if (stop && !start) {
