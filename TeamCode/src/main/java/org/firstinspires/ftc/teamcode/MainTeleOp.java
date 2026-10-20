@@ -11,7 +11,8 @@ public class MainTeleOp extends OpMode {
     private DriveTrain drive;
     private Intake intake;
     private Intake transfer;
-    private Shooter shooter;
+    private Shooter shooterP;
+    private Shooter shooterN;
 
     double lSY;
     double lSX;
@@ -25,6 +26,7 @@ public class MainTeleOp extends OpMode {
 
     boolean x;
     boolean y;
+    boolean a;
     boolean b;
 
     public void init() {
@@ -35,7 +37,8 @@ public class MainTeleOp extends OpMode {
 
         intake = new Intake(hardwareMap, "IntakeMotor", FORWARD);
         transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
-        shooter = new Shooter(hardwareMap, "ShooterMotor", "ShooterFlap", RUN_USING_ENCODER, FORWARD);
+        shooterP = new Shooter(hardwareMap, "PollenMotor", "PollenFlap", RUN_USING_ENCODER, REVERSE);
+        shooterN = new Shooter(hardwareMap, "NectarMotor", "NectarFlap", RUN_USING_ENCODER, REVERSE);
     }
 
     public void loop() {
@@ -44,7 +47,8 @@ public class MainTeleOp extends OpMode {
         intake.intake(lB1, rB1);
         transfer.intake(lB2, rB2);
         drive.operate(lSY, lSX, rSX, rT);
-        shooter.shoot(x, y, b);
+        shooterP.shoot(x, y, b);
+        shooterN.shoot(x, a, b);
     }
 
     private void ctrlVars() {
@@ -58,6 +62,7 @@ public class MainTeleOp extends OpMode {
         rB2 = gamepad2.right_bumper;
         x = gamepad2.x;
         y = gamepad2.y;
+        a = gamepad2.a;
         b = gamepad2.b;
     }
 }
