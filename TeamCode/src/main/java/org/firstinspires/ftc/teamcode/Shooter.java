@@ -4,11 +4,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.PID.PIDF;
+
 public class Shooter {
+    private PIDF pidf = new PIDF();
+
     private final DcMotorEx shooter;
     private final Servo flap;
-
-    private double targetVelocity = 1650;
     private boolean shooterOn = false;
 
     public Shooter(HardwareMap hardwareMap,
@@ -23,12 +25,16 @@ public class Shooter {
     }
 
     public void setTargetVelocity(double velocity) {
-        targetVelocity = velocity;
+        pidf.setTarget(velocity);
+    }
+
+    public double getShooterVelocity() {
+        return(shooter.getVelocity());
     }
 
     public void shoot(boolean start, boolean shoot, boolean stop) {
         if (start && !stop) {
-            shooter.setVelocity(targetVelocity);
+            shooter.setPower(pidf.runPIDF(shooter.getVelocity()));
             shooterOn = true;
         }
 
@@ -37,7 +43,7 @@ public class Shooter {
         }
 
         if (stop && !start) {
-            shooter.setVelocity(0);
+            pidf.setTarget(0);
             shooterOn = false;
         }
 

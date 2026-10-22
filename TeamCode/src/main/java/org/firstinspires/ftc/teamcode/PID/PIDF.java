@@ -5,8 +5,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class PIDF {
-    private DcMotorEx motor;
-
     private double p;
     private double i;
     private double d;
@@ -27,11 +25,6 @@ public class PIDF {
 
     ElapsedTime timer = new ElapsedTime();
 
-    public PIDF(HardwareMap hardwareMap, String motor, DcMotorEx.RunMode runMode) {
-        this.motor = hardwareMap.get(DcMotorEx.class, motor);
-        this.motor.setMode(runMode);
-    }
-
     public void setPIDF(double p, double i, double d, double f) {
         this.p = p;
         this.i = i;
@@ -47,11 +40,7 @@ public class PIDF {
         integralLim = limit;
     }
 
-    public double getVelocity() {
-        return(motor.getVelocity());
-    }
-
-    public void runPIDF(double value) {
+    public double runPIDF(double value) {
         error = target - value;
         derivative = (error - lastError) / timer.seconds();
         integral = integral + (error * timer.seconds());
@@ -68,12 +57,13 @@ public class PIDF {
         }
 
         output = (p * error) + (i * integral) + (d * derivative) + (f * target);
-        motor.setPower(output);
 
         lastError = error;
         lastTarget = target;
 
         timer.reset();
+
+        return output;
     }
 
 }
