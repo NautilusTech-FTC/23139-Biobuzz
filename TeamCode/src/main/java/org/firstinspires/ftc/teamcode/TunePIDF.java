@@ -11,8 +11,8 @@ public class TunePIDF extends OpMode {
     private DriveTrain drive;
     private Intake intake;
     private Intake transfer;
-    private Shooter shooterP;
-    private Shooter shooterN;
+    private PIDFShooter shooterP;
+    private PIDFShooter shooterN;
 
     double lSY;
     double lSX;
@@ -42,8 +42,8 @@ public class TunePIDF extends OpMode {
 
         intake = new Intake(hardwareMap, "IntakeMotor", FORWARD);
         transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
-        shooterP = new Shooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
-        shooterN = new Shooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
+        shooterP = new PIDFShooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
+        shooterN = new PIDFShooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
 
         shooterP.setCloseGate(0.269);
         shooterP.setOpenGate(0.303);

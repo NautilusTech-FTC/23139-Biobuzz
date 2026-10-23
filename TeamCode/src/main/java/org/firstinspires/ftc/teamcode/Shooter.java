@@ -4,11 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.PID.PIDF;
-
 public class Shooter {
-    public PIDF pidf = new PIDF(); //Public cuz tuning
-
     private final DcMotorEx shooter;
     private final Servo gate;
 
@@ -27,10 +23,6 @@ public class Shooter {
         this.gate = hardwareMap.get(Servo.class, gate);
     }
 
-    public void setTargetVelocity(double velocity) {
-        pidf.setTarget(velocity);
-    }
-
     public void setCloseGate(double closePos) {
         closeGate = closePos;
     }
@@ -45,9 +37,7 @@ public class Shooter {
 
     public void shoot(boolean start, boolean shoot, boolean stop) {
         if (start && !stop) {
-            //pidf.setTarget(1600);
-            //shooter.setPower(pidf.runPIDF(shooter.getVelocity()));
-            shooter.setVelocity(1600); //gotta find the right velocity first.
+            shooter.setVelocity(1600);
             shooterOn = true;
         }
 
@@ -56,7 +46,7 @@ public class Shooter {
         }
 
         if (stop && !start) {
-            pidf.setTarget(0);
+            shooter.setVelocity(0);
             shooterOn = false;
             gate.setPosition(closeGate);
         }
