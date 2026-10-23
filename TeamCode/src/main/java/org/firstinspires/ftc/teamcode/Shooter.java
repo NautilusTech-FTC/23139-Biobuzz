@@ -10,22 +10,33 @@ public class Shooter {
     private PIDF pidf = new PIDF();
 
     private final DcMotorEx shooter;
-    private final Servo flap;
+    private final Servo gate;
+
     private boolean shooterOn = false;
+    private double closeGate;
+    private double openGate;
 
     public Shooter(HardwareMap hardwareMap,
-                   String shooter, String flap,
+                   String shooter, String gate,
                    DcMotorEx.RunMode runMode,
                    DcMotorEx.Direction direction) {
         this.shooter = hardwareMap.get(DcMotorEx.class, shooter);
         this.shooter.setMode(runMode);
         this.shooter.setDirection(direction);
 
-        this.flap = hardwareMap.get(Servo.class, flap);
+        this.gate = hardwareMap.get(Servo.class, gate);
     }
 
     public void setTargetVelocity(double velocity) {
         pidf.setTarget(velocity);
+    }
+
+    public void setCloseGate(double closePos) {
+        closeGate = closePos;
+    }
+
+    public void setOpenGate(double openPos) {
+        openGate = openPos;
     }
 
     public double getShooterVelocity() {
@@ -39,12 +50,13 @@ public class Shooter {
         }
 
         if (shoot && shooterOn) {
-
+            gate.setPosition(openGate);
         }
 
         if (stop && !start) {
             pidf.setTarget(0);
             shooterOn = false;
+            gate.setPosition(closeGate);
         }
 
     }

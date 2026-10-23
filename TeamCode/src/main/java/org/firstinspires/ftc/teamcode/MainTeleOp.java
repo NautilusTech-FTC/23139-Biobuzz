@@ -37,8 +37,13 @@ public class MainTeleOp extends OpMode {
 
         intake = new Intake(hardwareMap, "IntakeMotor", FORWARD);
         transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
-        shooterP = new Shooter(hardwareMap, "PollenMotor", "PollenFlap", RUN_USING_ENCODER, REVERSE);
-        shooterN = new Shooter(hardwareMap, "NectarMotor", "NectarFlap", RUN_USING_ENCODER, REVERSE);
+        shooterP = new Shooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
+        shooterN = new Shooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
+
+        shooterP.setCloseGate(0.269);
+        shooterP.setOpenGate(0.303);
+        shooterN.setCloseGate(0);
+        shooterN.setOpenGate(0.02);
     }
 
     public void loop() {
