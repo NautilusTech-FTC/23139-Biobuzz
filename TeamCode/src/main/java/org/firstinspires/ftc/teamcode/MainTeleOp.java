@@ -13,6 +13,7 @@ public class MainTeleOp extends OpMode {
     private Intake transfer;
     private Shooter shooterP;
     private Shooter shooterN;
+    private Flower flower;
 
     double lSY;
     double lSX;
@@ -29,6 +30,9 @@ public class MainTeleOp extends OpMode {
     boolean a;
     boolean b;
 
+    boolean down;
+    boolean up;
+
     public void init() {
         drive = new DriveTrain(
                 hardwareMap,
@@ -39,11 +43,14 @@ public class MainTeleOp extends OpMode {
         transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
         shooterP = new Shooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
         shooterN = new Shooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
+        flower = new Flower(hardwareMap, "FlowerRamp");
 
         shooterP.setCloseGate(0.269);
         shooterP.setOpenGate(0.303);
         shooterN.setCloseGate(0);
         shooterN.setOpenGate(0.02);
+        flower.setIntakeDown(0);
+        flower.setIntakeUp(0);
     }
 
     public void loop() {
@@ -69,5 +76,7 @@ public class MainTeleOp extends OpMode {
         y = gamepad2.y;
         a = gamepad2.a;
         b = gamepad2.b;
+        down = gamepad1.dpad_down;
+        up = gamepad1.dpad_up;
     }
 }
