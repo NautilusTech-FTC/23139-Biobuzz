@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.PID;
 
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class PIDF {
@@ -22,6 +20,10 @@ public class PIDF {
     private double derivative;
 
     private double output;
+
+    //Tuning:
+    double stepSizes[] = {10.0, 1.0, 0.1, 0.01, 0.001, 0.0001};
+    int stepIndex = 1;
 
     ElapsedTime timer = new ElapsedTime();
 
@@ -64,6 +66,27 @@ public class PIDF {
         timer.reset();
 
         return output;
+    }
+
+    //Tuning:
+    public void tunePIDF(boolean stepUp, boolean vDown1, boolean vUp1, boolean vDown2, boolean vUp2) {
+        if (stepUp) {
+            stepIndex = (stepIndex + 1) % stepSizes.length;
+        }
+
+        if (vDown1) {
+            f -= stepSizes[stepIndex];
+        }
+        if (vUp1) {
+            f += stepSizes[stepIndex];
+        }
+
+        if (vDown2) {
+            p -= stepSizes[stepIndex];
+        }
+        if (vUp2) {
+            p += stepSizes[stepIndex];
+        }
     }
 
 }
