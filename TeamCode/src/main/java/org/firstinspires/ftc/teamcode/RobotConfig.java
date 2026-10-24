@@ -15,8 +15,8 @@ public class RobotConfig extends OpMode {
     Robot.startPositions[] startPositions = Robot.startPositions.values();
     Robot.autos[] autos = Robot.autos.values();
 
-    int selection = 0;
-    int selectionThing = 0;
+    int horizontalSelection = 0;
+    int verticalSelection = 0;
 
     @Override
     public void init() {
@@ -28,34 +28,34 @@ public class RobotConfig extends OpMode {
         changeSelectionArea();
         loopThroughOptions();
 
-        if (selectionThing == 0) {
+        if (verticalSelection == 0) {
             telemetry.addData("> alliance: ", alSelect);
         } else {
             telemetry.addData("alliance: ", alSelect);
         }
 
-        if (selectionThing == 1) {
+        if (verticalSelection == 1) {
             telemetry.addData("> drive: ", dSelect);
         } else {
             telemetry.addData("drive: ", dSelect);
         }
 
-        if (selectionThing == 2) {
+        if (verticalSelection == 2) {
             telemetry.addData("> start position: ", sSelect);
         } else {
             telemetry.addData("start position: ", sSelect);
         }
 
-        if (selectionThing == 3) {
+        if (verticalSelection == 3) {
             telemetry.addData("> auto: ", auSelect);
         } else {
             telemetry.addData("auto: ", auSelect);
         }
 
-        if (selectionThing == 4) {
+        if (verticalSelection == 4) {
             telemetry.addData("Selection complete!", "Press START to submit or B to restart");
             if (gamepad1.b) {
-                selectionThing = 0;
+                verticalSelection = 0;
             }
         }
     }
@@ -76,46 +76,46 @@ public class RobotConfig extends OpMode {
 
     void loopThroughOptions () {
         if (gamepad1.dpad_right) {
-            selection++;
+            horizontalSelection++;
         }
         if (gamepad1.dpad_left) {
-            selection--;
+            horizontalSelection--;
         }
 
 
-        switch (selectionThing) {
+        switch (verticalSelection) {
             case 0:
-                if (selection < 0) {
-                    selection = alliances.length - 1;
+                if (horizontalSelection < 0) {
+                    horizontalSelection = alliances.length - 1;
                 }
-                alSelect = alliances[(selection % alliances.length)];
+                alSelect = alliances[(horizontalSelection % alliances.length)];
                 break;
             case 1:
-                if (selection < 0) {
-                    selection = drives.length - 1;
+                if (horizontalSelection < 0) {
+                    horizontalSelection = drives.length - 1;
                 }
-                dSelect = drives[(selection % drives.length)];
+                dSelect = drives[(horizontalSelection % drives.length)];
                 break;
             case 2:
-                if (selection < 0) {
-                    selection = startPositions.length - 1;
+                if (horizontalSelection < 0) {
+                    horizontalSelection = startPositions.length - 1;
                 }
-                sSelect = startPositions[(selection % startPositions.length)];
+                sSelect = startPositions[(horizontalSelection % startPositions.length)];
                 break;
             case 3:
-                if (selection < 0) {
-                    selection = autos.length - 1;
+                if (horizontalSelection < 0) {
+                    horizontalSelection = autos.length - 1;
                 }
-                auSelect = autos[(selection % autos.length)];
+                auSelect = autos[(horizontalSelection % autos.length)];
                 break;
         }
     }
 
     void changeSelectionArea () {
         if (gamepad1.aWasPressed()) {
-            selection = 0;
-            if (selectionThing < 4) {
-                selectionThing++;
+            horizontalSelection = 0;
+            if (verticalSelection < 4) {
+                verticalSelection++;
             }
         }
     }

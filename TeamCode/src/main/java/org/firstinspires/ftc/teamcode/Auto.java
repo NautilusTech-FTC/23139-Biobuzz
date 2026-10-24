@@ -9,6 +9,7 @@ import com.pedropathing.paths.Path;
 import com.pedropathing.ivy.Command;
 import com.pedropathing.ivy.Scheduler;
 import static com.pedropathing.ivy.Scheduler.schedule;
+import static com.pedropathing.ivy.commands.Commands.waitMs;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -18,12 +19,24 @@ import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @Autonomous
 public class Auto extends OpMode {
+    //NONE OF THESE AUTOS ARE TESTED
 
+    private final IvySubsystems ivy = new IvySubsystems();
     private Follower follower;
 
     private final PoseFactory poseFactory = PoseFactory.degrees();
 
     private final Pose shootStart = poseFactory.of(56, 8, 90);
+
+    //Friendly push
+    private final Pose start = poseFactory.of(8.6274, 60.1099, 90);
+    private final Pose path1 = poseFactory.of(8.6274, 98.6143, 180);
+
+
+    //Shoot 'n park (medium complexity auto)
+    private final Pose park2 = poseFactory.of(10.7658, 98.8414, 0);
+    private final Pose park2Control1 = poseFactory.of(32.3829, 44.9207, 0);
+    private final Pose park2Control2 = poseFactory.of(13.4541, 24.9694, 0);
 
     //More complicated auto
     private final Pose gardenIntake = poseFactory.of(9.7063, 8.0261, 178.4579);
@@ -39,59 +52,97 @@ public class Auto extends OpMode {
     private final Pose flowerIntakeControl3 = poseFactory.of(42.9614, 98.1646, 0);
     private final Pose park3 = poseFactory.of(9.0261, 114.2315, 90);
     private final Pose point5Control1 = poseFactory.of(49.3288, 118.5721, 0);
-
-    public void init () {}
-    public void loop () {}
-/*
-    // Autonomous routine
-    public Command autoRoutine() {
+    Command shootPause = waitMs(5000);
+    public Command mediumAuto() {
         return sequential(
-                follow(follower, path2()),
-                follow(follower, path3()),
-                follow(follower, path4()),
-                follow(follower, path5())
+                ivy.pollenOn,
+                ivy.pollenShoot,
+                ivy.transferOn,
+                shootPause,
+                ivy.pollenOff,
+                ivy.transferOff,
+                follow(follower, mediumPath0())
+        );
+    }
+
+    //REQUIRES FLOWER RAMP
+    public Command complexAuto() {
+        return sequential(
+                ivy.pollenOn,
+                ivy.pollenShoot,
+                ivy.transferOn,
+                shootPause,
+                ivy.pollenOff,
+                ivy.intakeOn,
+                follow(follower, complexPath0()),
+                ivy.intakeOff,
+                ivy.transferOff,
+                follow(follower, complexPath1()),
+                ivy.pollenOn,
+                ivy.pollenShoot,
+                ivy.transferOn,
+                shootPause,
+                ivy.pollenOff,
+                ivy.intakeOn,
+                ivy.flowerDown,
+                follow(follower, complexPath2()),
+                ivy.transferOff,
+                ivy.intakeOff,
+                follow(follower, complexPath3()),
+                ivy.flowerUp
         );
     }
     @Override
-    public void runOpMode() {
+    public void init () {
         Scheduler.reset();
         follower = Constants.create(hardwareMap);
         follower.setPose(shootStart);
         follower.update();
+        ivy.init(hardwareMap);
 
-        waitForStart();
-        schedule(autoRoutine());
-
-        while (opModeIsActive()) {
-            follower.update();
-            Scheduler.execute();
-
-            telemetry.addData("x", follower.pose().x());
-            telemetry.addData("y", follower.pose().y());
-            telemetry.addData("heading", follower.pose().heading());
-
-            if (follower.currentPath() != null) {
-                telemetry.addData("Current path distance remaining", follower.distanceToEndpoint());
-                telemetry.addData("Path number", follower.pathIndex());
-            }
-
-            telemetry.update();
+        if (Robot.Infoz.auto == Robot.autos.PUSH_OTHER_BOT) {
+            schedule(follow(follower, simplePath0()));
+        }
+        if (Robot.Infoz.auto == Robot.autos.SHOOT_AND_PUSH) {
+            schedule(mediumAuto());
+        }
+        if (Robot.Infoz.auto == Robot.autos.SHOOT_FLOWER_SHOOT) {
+            schedule(complexAuto());
         }
     }
 
-    public Path path2() {
-        return Paths.curve(path1, gardenIntakeControl1, gardenIntakeControl2, gardenIntake).tangent();
+    @Override
+    public void loop () {
+        follower.update();
+        Scheduler.execute();
     }
 
-    public Path path3() {
-        return Paths.curve(point3Start, secondShootControl1, secondShootControl2, secondShootControl3, secondShoot).linear(point3Start, secondShoot);
+    @Override
+    public void stop () {
+        Robot.Infoz.autoEndPose = follower.pose();
     }
 
-    public Path path4() {
+    public Path simplePath0() {
+        return Paths.line(start, path1).constant(path1);
+    }
+
+    public Path mediumPath0() {
+        return Paths.curve(shootStart, park2Control1, park2Control2, park2).constant(park2);
+    }
+
+    public Path complexPath0() {
+        return Paths.curve(shootStart, gardenIntakeControl1, gardenIntakeControl2, gardenIntake).tangent();
+    }
+
+    public Path complexPath1() {
+        return Paths.curve(gardenIntake, secondShootControl1, secondShootControl2, secondShootControl3, secondShoot).linear(gardenIntake, secondShoot);
+    }
+
+    public Path complexPath2() {
         return Paths.curve(secondShoot, flowerIntakeControl1, flowerIntakeControl2, flowerIntakeControl3, flowerIntake).tangent();
     }
 
-    public Path path5() {
+    public Path complexPath3() {
         return Paths.curve(flowerIntake, point5Control1, park3).constant(park3);
-    }*/
+    }
 }
