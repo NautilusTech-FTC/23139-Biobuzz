@@ -10,12 +10,12 @@ public class TuneServo extends OpMode {
     public double position;
 
     public void init () {
-        servo = hardwareMap.get(Servo.class, "testservo");
+        servo = hardwareMap.get(Servo.class, "FlowerRamp");
     }
 
     public void start() {
         position = 0;
-        servo.setPosition(0);
+        //servo.setPosition(0);
     }
 
     public void loop() {

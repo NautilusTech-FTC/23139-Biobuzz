@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Flower {
-    private final Servo intake;
+    final Servo intake;
 
     private double intakeDown;
 

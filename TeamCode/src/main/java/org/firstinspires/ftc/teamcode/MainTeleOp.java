@@ -36,7 +36,7 @@ public class MainTeleOp extends OpMode {
     public void init() {
         drive = new DriveTrain(
                 hardwareMap,
-                "Motor0", "Motor1", "Motor2", "Motor3",
+                "FrontLeft", "FrontRight", "BackRight", "BackLeft",
                 REVERSE, FORWARD, FORWARD, REVERSE);
 
         intake = new Intake(hardwareMap, "IntakeMotor", FORWARD);
