@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
 
+@Configurable
 @TeleOp
 public class MainTeleOp extends OpMode {
     private DriveTrain drive;
@@ -33,6 +36,9 @@ public class MainTeleOp extends OpMode {
     boolean down;
     boolean up;
 
+    public static double pollenV = 1300;
+    public static double nectarV = 1300;
+
     public void init() {
         drive = new DriveTrain(
                 hardwareMap,
@@ -43,13 +49,13 @@ public class MainTeleOp extends OpMode {
         transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
         shooterP = new Shooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
         shooterN = new Shooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
-        flower = new Flower(hardwareMap, "FlowerRamp");
+        flower = new Flower(hardwareMap, "FlowerRamp", Servo.Direction.REVERSE);
 
         shooterP.setCloseGate(0.269);
         shooterP.setOpenGate(0.303);
         shooterN.setCloseGate(0);
         shooterN.setOpenGate(0.02);
-        flower.setIntakeDown(0);
+        flower.setIntakeDown(0.616);
         flower.setIntakeUp(0);
     }
 
@@ -59,8 +65,9 @@ public class MainTeleOp extends OpMode {
         intake.intake(lB1, rB1);
         transfer.intake(lB2, rB2);
         drive.operate(lSY, lSX, rSX, rT);
-        shooterP.shoot(x, y, b);
-        shooterN.shoot(x, a, b);
+        shooterP.shoot(x, y, b, pollenV);
+        shooterN.shoot(x, a, b, nectarV);
+        flower.lift(down, up);
     }
 
     private void ctrlVars() {

@@ -35,9 +35,9 @@ public class Shooter {
         return(shooter.getVelocity());
     }
 
-    public void shoot(boolean start, boolean shoot, boolean stop) {
+    public void shoot(boolean start, boolean shoot, boolean stop, double velocity) {
         if (start && !stop) {
-            shooter.setVelocity(1600);
+            shooter.setVelocity(velocity);
             shooterOn = true;
         }
 

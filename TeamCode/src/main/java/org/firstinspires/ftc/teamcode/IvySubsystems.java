@@ -7,6 +7,7 @@ import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 import com.pedropathing.ivy.Command;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Intake;
 import org.firstinspires.ftc.teamcode.Shooter;
@@ -32,7 +33,7 @@ public class IvySubsystems {
 
     public void init(HardwareMap hardwareMap) {
         //Hardware Maps
-        flower = new Flower(hardwareMap, "FlowerRamp");
+        flower = new Flower(hardwareMap, "FlowerRamp", Servo.Direction.REVERSE);
         intake = new Intake(hardwareMap, "IntakeMotor", FORWARD);
         transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
         shooterP = new Shooter(hardwareMap, "PollenMotor", "PollenFlap", RUN_USING_ENCODER, REVERSE);
@@ -81,29 +82,29 @@ public class IvySubsystems {
         //Pollen Shooter Commands
         pollenOn = Command.build()
                 .setExecute(() -> {
-                    shooterP.shoot(true, false, false);
+                    shooterP.shoot(true, false, false, 1300);
                 });
         pollenShoot = Command.build()
                 .setStart(() -> {
-                    shooterP.shoot(false, true, false);
+                    shooterP.shoot(false, true, false, 1300);
                 });
         pollenOff = Command.build()
                 .setStart(() -> {
-                    shooterP.shoot(false, false, true);
+                    shooterP.shoot(false, false, true, 1300);
                 });
 
         //Nectar Shooter Commands
         nectarOn = Command.build()
                 .setExecute(() -> {
-                    shooterN.shoot(true, false, false);
+                    shooterN.shoot(true, false, false, 1300);
                 });
         nectarShoot = Command.build()
                 .setStart(() -> {
-                    shooterN.shoot(false, true, false);
+                    shooterN.shoot(false, true, false, 1300);
                 });
         nectarOff = Command.build()
                 .setStart(() -> {
-                    shooterN.shoot(false, false, true);
+                    shooterN.shoot(false, false, true, 1300);
                 });
     }
 }

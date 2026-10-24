@@ -10,8 +10,10 @@ public class Flower {
 
     private double intakeUp;
 
-    public Flower(HardwareMap hardwareMap, String intake) {
+    public Flower(HardwareMap hardwareMap, String intake, Servo.Direction dir) {
         this.intake = hardwareMap.get(Servo.class, intake);
+        this.intake.setDirection(dir);
+        this.intake.setPosition(0); //Temporary.
     }
 
     public void setIntakeDown(double downPos) {
