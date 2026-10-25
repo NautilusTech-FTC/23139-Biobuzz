@@ -29,15 +29,17 @@ public class MainTeleOp extends OpMode {
     boolean rB2;
 
     boolean x;
+    boolean b;
+    boolean r;
+    boolean l;
     boolean y;
     boolean a;
-    boolean b;
 
     boolean down;
     boolean up;
 
-    public static double pollenV = 1300;
-    public static double nectarV = 1300;
+    public static double pollenV = 920;
+    public static double nectarV = 940;
 
     public void init() {
         drive = new DriveTrain(
@@ -55,7 +57,7 @@ public class MainTeleOp extends OpMode {
         shooterP.setOpenGate(0.303);
         shooterN.setCloseGate(0);
         shooterN.setOpenGate(0.02);
-        flower.setIntakeDown(0.616);
+        flower.setIntakeDown(0.6);
         flower.setIntakeUp(0);
     }
 
@@ -66,8 +68,11 @@ public class MainTeleOp extends OpMode {
         transfer.intake(lB2, rB2);
         drive.operate(lSY, lSX, rSX, rT);
         shooterP.shoot(x, y, b, pollenV);
-        shooterN.shoot(x, a, b, nectarV);
+        shooterN.shoot(l, a, r, nectarV);
         flower.lift(down, up);
+
+        telemetry.addData("Pollen V: ", shooterP.getShooterVelocity());
+        telemetry.addData("Nectar V: ", shooterN.getShooterVelocity());
     }
 
     private void ctrlVars() {
@@ -80,9 +85,11 @@ public class MainTeleOp extends OpMode {
         lB2 = gamepad2.left_bumper;
         rB2 = gamepad2.right_bumper;
         x = gamepad2.x;
+        b = gamepad2.b;
+        r = gamepad2.dpad_right;
+        l = gamepad2.dpad_left;
         y = gamepad2.y;
         a = gamepad2.a;
-        b = gamepad2.b;
         down = gamepad1.dpad_down;
         up = gamepad1.dpad_up;
     }

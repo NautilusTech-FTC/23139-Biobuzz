@@ -12,6 +12,9 @@ import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.commands.Commands.waitMs;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -19,6 +22,9 @@ import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @Autonomous
 public class Auto extends OpMode {
+
+    DriveTrain drive;
+
     //NONE OF THESE AUTOS ARE TESTED
 
     private final IvySubsystems ivy = new IvySubsystems();
@@ -94,7 +100,10 @@ public class Auto extends OpMode {
     }
     @Override
     public void init () {
-        Scheduler.reset();
+        drive = new DriveTrain( hardwareMap,
+                "FrontLeft", "FrontRight", "BackRight", "BackLeft",
+                REVERSE, FORWARD, FORWARD, REVERSE);
+        /*Scheduler.reset();
         follower = Constants.create(hardwareMap);
         follower.setPose(shootStart);
         follower.update();
@@ -108,13 +117,14 @@ public class Auto extends OpMode {
         }
         if (Robot.Infoz.auto == Robot.autos.SHOOT_FLOWER_SHOOT) {
             schedule(complexAuto());
-        }
+        }*/
     }
 
     @Override
     public void loop () {
-        follower.update();
-        Scheduler.execute();
+        drive.operate(-0.1, 0, 0, 0);
+        /*follower.update();
+        Scheduler.execute();*/
     }
 
     @Override
