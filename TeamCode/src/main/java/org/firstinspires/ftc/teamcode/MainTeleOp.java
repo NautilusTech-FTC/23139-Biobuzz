@@ -8,6 +8,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
 
+import org.firstinspires.ftc.teamcode.Methods.DriveTrain;
+import org.firstinspires.ftc.teamcode.Methods.Flower;
+import org.firstinspires.ftc.teamcode.Methods.Intake;
+import org.firstinspires.ftc.teamcode.Methods.Shooter;
+
 @Configurable
 @TeleOp
 public class MainTeleOp extends OpMode {

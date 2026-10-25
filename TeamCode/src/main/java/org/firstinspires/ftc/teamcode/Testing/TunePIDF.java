@@ -1,10 +1,14 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
+
+import org.firstinspires.ftc.teamcode.Methods.DriveTrain;
+import org.firstinspires.ftc.teamcode.Methods.Intake;
+import org.firstinspires.ftc.teamcode.Methods.PIDFShooter;
 
 @TeleOp
 public class TunePIDF extends OpMode {

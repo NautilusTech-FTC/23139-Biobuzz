@@ -5,15 +5,15 @@ import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
 import com.pedropathing.ivy.Command;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Intake;
-import org.firstinspires.ftc.teamcode.Shooter;
+import org.firstinspires.ftc.teamcode.Methods.Flower;
+import org.firstinspires.ftc.teamcode.Methods.Intake;
+import org.firstinspires.ftc.teamcode.Methods.Shooter;
 
 public class IvySubsystems {
-    private  Flower flower;
+    private Flower flower;
     private Intake intake;
     private Intake transfer;
     private Shooter shooterP;

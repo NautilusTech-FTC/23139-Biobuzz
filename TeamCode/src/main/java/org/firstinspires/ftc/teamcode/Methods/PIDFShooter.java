@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Methods;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.PID.PIDF;
+import org.firstinspires.ftc.teamcode.Methods.PID.PIDF;
 
 public class PIDFShooter {
     public PIDF pidf = new PIDF(); //Public cuz tuning
