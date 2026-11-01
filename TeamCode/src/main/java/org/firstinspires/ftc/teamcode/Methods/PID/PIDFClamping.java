@@ -1,12 +1,8 @@
 package org.firstinspires.ftc.teamcode.Methods.PID;
 
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class PIDFClamping {
-    private DcMotorEx motor;
-
     private double p;
     private double i;
     private double d;
@@ -27,12 +23,11 @@ public class PIDFClamping {
     private double rawOut;
     private double output;
 
-    ElapsedTime timer = new ElapsedTime();
+    //Tuning:
+    double stepSizes[] = {10.0, 1.0, 0.1, 0.01, 0.001, 0.0001};
+    int stepIndex = 1;
 
-    public PIDFClamping(HardwareMap hardwareMap, String motor, DcMotorEx.RunMode runMode) {
-        this.motor = hardwareMap.get(DcMotorEx.class, motor);
-        this.motor.setMode(runMode);
-    }
+    ElapsedTime timer = new ElapsedTime();
 
     public void setPIDF(double p, double i, double d, double f) {
         this.p = p;
@@ -53,11 +48,7 @@ public class PIDFClamping {
         this.minOut = minOut;
     }
 
-    public double getVelocity() {
-        return(motor.getVelocity());
-    }
-
-    public void runPIDF(double value) {
+    public double runPIDF(double value) {
         double time = timer.seconds();
 
         error = target - value;
@@ -74,12 +65,34 @@ public class PIDFClamping {
         else {integral = integral + (error * time);}
 
         output = Math.max(minOut, Math.min(maxOut, rawOut));
-        motor.setPower(output);
 
         lastError = error;
         lastTarget = target;
 
         timer.reset();
+
+        return output;
+    }
+
+    //Tuning:
+    public void tunePIDF(boolean stepUp, boolean vDown1, boolean vUp1, boolean vDown2, boolean vUp2) {
+        if (stepUp) {
+            stepIndex = (stepIndex + 1) % stepSizes.length;
+        }
+
+        if (vDown1) {
+            f -= stepSizes[stepIndex];
+        }
+        if (vUp1) {
+            f += stepSizes[stepIndex];
+        }
+
+        if (vDown2) {
+            p -= stepSizes[stepIndex];
+        }
+        if (vUp2) {
+            p += stepSizes[stepIndex];
+        }
     }
 
 }
