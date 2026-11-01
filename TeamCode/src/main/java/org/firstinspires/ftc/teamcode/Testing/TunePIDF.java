@@ -61,8 +61,8 @@ public class TunePIDF extends OpMode {
         intake.intake(lB1, rB1);
         transfer.intake(lB2, rB2);
         drive.operate(lSY, lSX, rSX, rT);
-        shooterP.shoot(x, y, b);
-        //shooterN.shoot(x, a, b);
+        shooterP.shoot(x, y, b, 920);
+        //shooterN.shoot(x, a, b, 940);
 
         shooterP.pidf.tunePIDF(a, down, up, left, right);
     }
