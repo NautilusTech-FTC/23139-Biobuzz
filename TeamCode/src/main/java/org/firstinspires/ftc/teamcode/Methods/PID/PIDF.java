@@ -38,6 +38,34 @@ public class PIDF {
         this.target = target;
     }
 
+    public double getTarget() {
+        return target;
+    } //pidf tuning
+
+    public double getError() {
+        return error;
+    } //pidf tuning
+
+    public double getP() {
+        return p;
+    } //pidf tuning
+
+    public double getI() {
+        return i;
+    } //pidf tuning
+
+    public double getD() {
+        return d;
+    } //pidf tuning
+
+    public double getF() {
+        return f;
+    } //pidf tuning
+
+    public double getStepSize() {
+        return stepSizes[stepIndex];
+    } //pidf tuning
+
     public void setIntegralLim(double limit) {
         integralLim = limit;
     }
