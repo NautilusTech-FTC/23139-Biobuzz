@@ -65,14 +65,9 @@ public class TunePIDF extends OpMode {
         //shooterN.shoot(x, a, b, 940);
 
         //PIDF tuning:
-        shooterP.pidf.tunePIDF(a, down, up, left, right);
+        telemetry.addData("Shooter Speed: ", shooterP.getShooterVelocity());
 
-        telemetry.addData("Target Speed: ", shooterP.pidf.getTarget());
-        telemetry.addData("Error: ", shooterP.pidf.getError());
-        telemetry.addLine("------------------------------------");
-        telemetry.addData("P: ", shooterP.pidf.getP());
-        telemetry.addData("F: ", shooterP.pidf.getF());
-        telemetry.addData("Step Size: ", shooterP.pidf.getStepSize());
+        shooterP.pidf.tunePIDF(a, down, up, left, right, telemetry);
     }
 
     private void ctrlVars() {

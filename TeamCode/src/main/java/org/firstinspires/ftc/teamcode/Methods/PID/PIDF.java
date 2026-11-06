@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Methods.PID;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class PIDF {
     private double p;
     private double i;
@@ -22,7 +24,7 @@ public class PIDF {
     private double output;
 
     //Tuning:
-    double stepSizes[] = {10.0, 1.0, 0.1, 0.01, 0.001, 0.0001};
+    double[] stepSizes = {10.0, 1.0, 0.1, 0.01, 0.001, 0.0001};
     int stepIndex = 1;
 
     ElapsedTime timer = new ElapsedTime();
@@ -37,34 +39,6 @@ public class PIDF {
     public void setTarget(double target) {
         this.target = target;
     }
-
-    public double getTarget() {
-        return target;
-    } //pidf tuning
-
-    public double getError() {
-        return error;
-    } //pidf tuning
-
-    public double getP() {
-        return p;
-    } //pidf tuning
-
-    public double getI() {
-        return i;
-    } //pidf tuning
-
-    public double getD() {
-        return d;
-    } //pidf tuning
-
-    public double getF() {
-        return f;
-    } //pidf tuning
-
-    public double getStepSize() {
-        return stepSizes[stepIndex];
-    } //pidf tuning
 
     public void setIntegralLim(double limit) {
         integralLim = limit;
@@ -97,7 +71,7 @@ public class PIDF {
     }
 
     //Tuning:
-    public void tunePIDF(boolean stepUp, boolean vDown1, boolean vUp1, boolean vDown2, boolean vUp2) {
+    public void tunePIDF(boolean stepUp, boolean vDown1, boolean vUp1, boolean vDown2, boolean vUp2, Telemetry telemetry) {
         if (stepUp) {
             stepIndex = (stepIndex + 1) % stepSizes.length;
         }
@@ -115,6 +89,13 @@ public class PIDF {
         if (vUp2) {
             p += stepSizes[stepIndex];
         }
+
+        telemetry.addData("Target Speed: ", target);
+        telemetry.addData("Error: ", error);
+        telemetry.addLine("------------------------------------");
+        telemetry.addData("P: ", p);
+        telemetry.addData("F: ", f);
+        telemetry.addData("Step Size: ", stepSizes[stepIndex]);
     }
 
 }
