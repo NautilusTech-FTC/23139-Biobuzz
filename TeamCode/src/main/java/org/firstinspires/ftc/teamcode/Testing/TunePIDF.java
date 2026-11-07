@@ -81,12 +81,13 @@ public class TunePIDF extends OpMode {
         rB2 = gamepad2.right_bumper;
         x = gamepad2.x;
         y = gamepad2.y;
-        a = gamepad2.a;
+        a = gamepad2.aWasPressed(); //pidf tuning
         b = gamepad2.b;
 
-        down = gamepad2.dpad_down;
-        up = gamepad2.dpad_up;
-        left = gamepad2.dpad_left;
-        right = gamepad2.dpad_right;
+        //PIDF tuning:
+        down = gamepad2.dpadDownWasPressed();
+        up = gamepad2.dpadUpWasPressed();
+        left = gamepad2.dpadLeftWasPressed();
+        right = gamepad2.dpadRightWasPressed();
     }
 }

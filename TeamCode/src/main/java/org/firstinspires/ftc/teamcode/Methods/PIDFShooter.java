@@ -46,7 +46,6 @@ public class PIDFShooter {
     public void shoot(boolean start, boolean shoot, boolean stop, double target) {
         if (start && !stop) {
             pidf.setTarget(target);
-            shooter.setPower(pidf.runPIDF(getShooterVelocity()));
             shooterOn = true;
         }
 
@@ -59,6 +58,8 @@ public class PIDFShooter {
             shooterOn = false;
             gate.setPosition(closeGate);
         }
+
+        shooter.setPower(pidf.runPIDF(getShooterVelocity()));
 
     }
 }
