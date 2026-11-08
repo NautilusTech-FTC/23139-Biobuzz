@@ -27,6 +27,7 @@ public class IvySubsystems {
     public Command pollenOn;
     public Command pollenShoot;
     public Command pollenOff;
+    public Command pollenRun;
     public Command nectarOn;
     public Command nectarShoot;
     public Command nectarOff;
@@ -47,11 +48,13 @@ public class IvySubsystems {
         flowerDown = Command.build()
                 .setStart(() -> {
                     flower.lift(true, false);
-                });
+                })
+                .setDone(() -> true);
         flowerUp = Command.build()
                 .setStart(() -> {
                     flower.lift(false, true);
-                });
+                })
+                .setDone(() -> true);
 
         //Intake Commands
         intakeOn = Command.build()
@@ -60,24 +63,28 @@ public class IvySubsystems {
                 })
                 .setEnd(endCondition -> {
                     intake.intake(false, false);
-                });
+                })
+                .setDone(() -> true);
         intakeOff = Command.build()
                 .setStart(() -> {
                     intake.intake(false, false);
-                });
+                })
+                .setDone(() -> true);
 
         //Transfer Commands
         transferOn = Command.build()
                 .setStart(() -> {
                     transfer.intake(false, true);
                 })
+                .setDone(() -> true)
                 .setEnd(endCondition -> {
                     transfer.intake(false, false);
                 });
         transferOff = Command.build()
                 .setStart(() -> {
                     transfer.intake(false, false);
-                });
+                })
+                .setDone(() -> true);
 
         //Pollen Shooter Commands
         pollenOn = Command.build()
@@ -87,11 +94,13 @@ public class IvySubsystems {
         pollenShoot = Command.build()
                 .setStart(() -> {
                     shooterP.shoot(false, true, false, 1300);
-                });
+                })
+                .setDone(() -> true);
         pollenOff = Command.build()
                 .setStart(() -> {
                     shooterP.shoot(false, false, true, 1300);
-                });
+                })
+                .setDone(() -> true);
 
         //Nectar Shooter Commands
         nectarOn = Command.build()
@@ -101,10 +110,12 @@ public class IvySubsystems {
         nectarShoot = Command.build()
                 .setStart(() -> {
                     shooterN.shoot(false, true, false, 1300);
-                });
+                })
+                .setDone(() -> true);
         nectarOff = Command.build()
                 .setStart(() -> {
                     shooterN.shoot(false, false, true, 1300);
-                });
+                })
+                .setDone(() -> true);
     }
 }

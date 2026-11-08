@@ -4,12 +4,15 @@ import com.pedropathing.api.Paths;
 
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.ivy.Scheduler;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.pedropathing.ivy.Command;
 
 import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.commands.Commands.waitMs;
+import static com.pedropathing.ivy.groups.Groups.deadline;
+import static com.pedropathing.ivy.groups.Groups.race;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
@@ -19,6 +22,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Methods.DriveTrain;
+import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @Autonomous
 public class Auto extends OpMode {
@@ -61,10 +65,12 @@ public class Auto extends OpMode {
     Command shootPause = waitMs(5000);
     public Command mediumAuto() {
         return sequential(
-                ivy.pollenOn,
-                ivy.pollenShoot,
-                ivy.transferOn,
-                shootPause,
+                deadline(
+                        shootPause,
+                        ivy.pollenOn,
+                        ivy.pollenShoot,
+                        ivy.transferOn
+                ),
                 ivy.pollenOff,
                 ivy.transferOff,
                 follow(follower, mediumPath0())
@@ -100,10 +106,7 @@ public class Auto extends OpMode {
     }
     @Override
     public void init () {
-        drive = new DriveTrain( hardwareMap,
-                "FrontLeft", "FrontRight", "BackRight", "BackLeft",
-                REVERSE, FORWARD, FORWARD, REVERSE);
-        /*Scheduler.reset();
+        Scheduler.reset();
         follower = Constants.create(hardwareMap);
         follower.setPose(shootStart);
         follower.update();
@@ -117,14 +120,13 @@ public class Auto extends OpMode {
         }
         if (Robot.Infoz.auto == Robot.autos.SHOOT_FLOWER_SHOOT) {
             schedule(complexAuto());
-        }*/
+        }
     }
 
     @Override
     public void loop () {
-        drive.operate(-0.1, 0, 0, 0);
-        /*follower.update();
-        Scheduler.execute();*/
+        follower.update();
+        Scheduler.execute();
     }
 
     @Override
