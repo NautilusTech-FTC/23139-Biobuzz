@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class PIDF {
-    private double p; //p-value options: 0.0047
+    private double p; //p-value options: 0.0047, 0.0046
     private double i;
     private double d;
     private double f;
@@ -24,7 +24,7 @@ public class PIDF {
     private double output;
 
     //Tuning:
-    double[] stepSizes = {1.0, 0.1, 0.01, 0.001, 0.0001, 0.00001};
+    double[] stepSizes = {1.0, 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001};
     int stepIndex = 3;
 
     ElapsedTime timer = new ElapsedTime();
