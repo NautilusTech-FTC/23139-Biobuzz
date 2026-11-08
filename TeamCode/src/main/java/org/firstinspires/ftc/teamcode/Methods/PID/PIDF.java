@@ -24,7 +24,7 @@ public class PIDF {
     private double output;
 
     //Tuning:
-    double[] stepSizes = {1.0, 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001};
+    double[] stepSizes = {1.0, 0.1, 0.01, 0.001, 0.0001, 0.00001};
     int stepIndex = 3;
 
     ElapsedTime timer = new ElapsedTime();
@@ -93,9 +93,9 @@ public class PIDF {
         telemetry.addData("Target Speed: ", target);
         telemetry.addData("Error: ", error);
         telemetry.addLine("------------------------------------");
-        telemetry.addData("P: ", p);
-        telemetry.addData("F: ", f);
-        telemetry.addData("Step Size: ", stepSizes[stepIndex]);
+        telemetry.addData("P: ", "%5f", p);
+        telemetry.addData("F: ", "%5f", f);
+        telemetry.addData("Step Size: ", "%5f", stepSizes[stepIndex]);
     }
 
 }
