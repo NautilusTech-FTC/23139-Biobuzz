@@ -33,11 +33,11 @@ public class IvySubsystems {
 
     public void init(HardwareMap hardwareMap) {
         //Hardware Maps
-        flower = new Flower(hardwareMap, "FlowerRamp", Servo.Direction.REVERSE);
         intake = new Intake(hardwareMap, "IntakeMotor", FORWARD);
         transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
-        shooterP = new Shooter(hardwareMap, "PollenMotor", "PollenFlap", RUN_USING_ENCODER, REVERSE);
-        shooterN = new Shooter(hardwareMap, "NectarMotor", "NectarFlap", RUN_USING_ENCODER, REVERSE);
+        shooterP = new Shooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
+        shooterN = new Shooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
+        flower = new Flower(hardwareMap, "FlowerRamp", Servo.Direction.REVERSE);
 
         createCommands();
     }
