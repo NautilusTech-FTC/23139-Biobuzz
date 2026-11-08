@@ -10,7 +10,8 @@ public class Robot {
 
     public enum drives {
         ROBOT_CENTRIC,
-        FIELD_CENTRIC
+        PEDRO_ROBOT_CENTRIC,
+        PEDRO_FIELD_CENTRIC
     }
 
     public enum startPositions {
@@ -26,7 +27,7 @@ public class Robot {
 
     public static class Infoz {
         public static alliances alliance = alliances.BLUE_ALLIANCE;
-        public static drives drive = drives.ROBOT_CENTRIC;
+        public static drives drive = drives.PEDRO_ROBOT_CENTRIC;
         public static startPositions startPosition = startPositions.SHOOT_POSITION;
         public static autos auto = autos.PUSH_OTHER_BOT;
         public static Pose autoEndPose = new Pose(0,0,0);
