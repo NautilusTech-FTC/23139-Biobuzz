@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class PIDF {
-    private double p = 0.0047; //p-value options (best performance - worst performance): 0.0047, 0.0046, 0.00468;
-    private double i;
+    private double p = 0.0047; //p-value options (best performance - worst performance): 0.0047, 0.0046, 0.00468
+    private double i; //f-value options: 0.0003, 0.0004
     private double d;
     private double f;
 
