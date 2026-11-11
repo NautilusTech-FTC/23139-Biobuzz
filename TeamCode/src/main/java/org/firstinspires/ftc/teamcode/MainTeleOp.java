@@ -48,6 +48,7 @@ public class MainTeleOp extends OpMode {
     public static double nectarV = 940;
 
     private Robot.drives driveMode = Robot.drives.PEDRO_ROBOT_CENTRIC;
+    Controller headingController = Controller.proportional(4.026386699615236);
 
     public void init() {
         //instance subsystems:
@@ -129,7 +130,7 @@ public class MainTeleOp extends OpMode {
 
             case PEDRO_FIELD_CENTRIC:
                 powers = ManualDrive.fieldCentric(
-                        -lSY, lSX, rSX,
+                        -lSY, -lSX, -rSX,
                         follower.pose().heading());
                 follower.manual(powers);
                 break;
@@ -139,15 +140,20 @@ public class MainTeleOp extends OpMode {
         //TODO: make this changed based off of team and hive position
         double targetX = 57.9;
         double targetY = 51;
+        telemetry.addData("Pose x", pose.x());
+        telemetry.addData("Pose y", pose.y());
+
+        telemetry.addData("Heading", pose.heading());
+        telemetry.addData("controller", headingController);
 
         if(aimButton) {
-            //AIM CODE
-            double angle = Math.atan2(targetX-pose.x(), targetY-pose.y());
-            ManualDrive.headingLock(follower, Controller.proportional(0.25), powers, angle);
-        } else {
-            //NORMAL DRIVE
-            ManualDrive.driveOrHold(follower, powers);
+
+            //Aim code will overwrite powers
+            double angle = Math.atan2(targetX-pose.x(), targetY-pose.y()) + 3.14159;
+            telemetry.addData("heading angle", angle);
+            powers = ManualDrive.headingLock(follower, headingController, powers, angle);
         }
+        ManualDrive.driveOrHold(follower, powers);
 
         follower.update();
     }
