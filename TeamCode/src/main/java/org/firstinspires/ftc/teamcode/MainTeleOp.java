@@ -38,7 +38,7 @@ public class MainTeleOp extends OpMode {
     boolean lB1,rB1;
     boolean lB2,rB2;
 
-    boolean x,b,r,l,y,a;
+    boolean x, b, r, l, y, u;
     boolean aimButton;
 
     boolean down;
@@ -88,7 +88,7 @@ public class MainTeleOp extends OpMode {
         intake.intake(lB1, rB1);
         transfer.intake(lB2, rB2);
         shooterP.shoot(x, y, b, pollenV);
-        shooterN.shoot(l, a, r, nectarV);
+        shooterN.shoot(l, u, r, nectarV);
         flower.lift(down, up);
 
         telemetry.addData("Pollen V: ", shooterP.getShooterVelocity());
@@ -109,7 +109,7 @@ public class MainTeleOp extends OpMode {
         r = gamepad2.dpad_right;
         l = gamepad2.dpad_left;
         y = gamepad2.y;
-        a = gamepad2.a;
+        u = gamepad2.dpad_up;
         down = gamepad1.dpad_down;
         up = gamepad1.dpad_up;
 
@@ -124,7 +124,7 @@ public class MainTeleOp extends OpMode {
                 return; //This is so we can have pedro code below the switch statement that will not run if its set to normal robot centric
 
             case PEDRO_ROBOT_CENTRIC:
-                powers = new DrivePowers(-lSY, lSX, rSX);
+                powers = new DrivePowers(-lSY, -lSX, -rSX);
                 break;
 
             case PEDRO_FIELD_CENTRIC:
@@ -149,7 +149,6 @@ public class MainTeleOp extends OpMode {
             ManualDrive.driveOrHold(follower, powers);
         }
 
-
-
+        follower.update();
     }
 }
