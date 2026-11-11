@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.field.FieldManager;
+import com.bylazar.field.PanelsField;
 import com.pedropathing.controllers.Controller;
 import com.pedropathing.controllers.PIDController;
 import com.pedropathing.drivetrain.DrivePowers;
@@ -23,6 +25,7 @@ import org.firstinspires.ftc.teamcode.pedro.Constants;
 @Configurable
 @TeleOp
 public class MainTeleOp extends OpMode {
+    private final PanelsField instance = PanelsField.INSTANCE;
     private DriveTrain drive;
     private Intake intake;
     private Intake transfer;
@@ -49,6 +52,7 @@ public class MainTeleOp extends OpMode {
 
     private Robot.drives driveMode = Robot.drives.PEDRO_ROBOT_CENTRIC;
     Controller headingController = Controller.proportional(4.026386699615236);
+    FieldManager field = PanelsField.INSTANCE.getField();
 
     public void init() {
         //instance subsystems:
@@ -77,6 +81,10 @@ public class MainTeleOp extends OpMode {
         //init pedro
         follower = Constants.create(hardwareMap);
         follower.setPose(Robot.Infoz.autoEndPose);
+
+        field.setOffsets(PanelsField.INSTANCE.getPresets().getPEDRO_PATHING());
+        field.setStyle("red", "blue", 2.0);
+
 
 
     }
@@ -142,6 +150,8 @@ public class MainTeleOp extends OpMode {
         double targetY = 51;
         telemetry.addData("Pose x", pose.x());
         telemetry.addData("Pose y", pose.y());
+        telemetry.addData("Target x", targetX);
+        telemetry.addData("Pose y", targetY);
 
         telemetry.addData("Heading", pose.heading());
         telemetry.addData("controller", headingController);
@@ -149,11 +159,14 @@ public class MainTeleOp extends OpMode {
         if(aimButton) {
 
             //Aim code will overwrite powers
-            double angle = Math.atan2(targetX-pose.x(), targetY-pose.y()) + 3.14159;
+            double angle = Math.atan2(targetX-pose.x(), targetY-pose.y());
             telemetry.addData("heading angle", angle);
             powers = ManualDrive.headingLock(follower, headingController, powers, angle);
         }
         ManualDrive.driveOrHold(follower, powers);
+
+        field.moveCursor(pose.x(), pose.y());
+        field.line(targetX, targetY);
 
         follower.update();
     }
