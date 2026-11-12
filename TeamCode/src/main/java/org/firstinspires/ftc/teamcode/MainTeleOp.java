@@ -18,6 +18,7 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
 
 import org.firstinspires.ftc.teamcode.Methods.DriveTrain;
 import org.firstinspires.ftc.teamcode.Methods.Flower;
+import org.firstinspires.ftc.teamcode.Methods.Gates;
 import org.firstinspires.ftc.teamcode.Methods.Intake;
 import org.firstinspires.ftc.teamcode.Methods.Shooter;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
@@ -31,6 +32,8 @@ public class MainTeleOp extends OpMode {
     private Intake transfer;
     private Shooter shooterP;
     private Shooter shooterN;
+    private Gates gateP;
+    private Gates gateN;
     private Flower flower;
 
     private Follower follower;
@@ -41,7 +44,7 @@ public class MainTeleOp extends OpMode {
     boolean lB1,rB1;
     boolean lB2,rB2;
 
-    boolean x, b, r, l, y, u;
+    boolean x, b, l, r, y, a, u, d;
     boolean aimButton;
 
     boolean down;
@@ -63,15 +66,17 @@ public class MainTeleOp extends OpMode {
 
         intake = new Intake(hardwareMap, "IntakeMotor", FORWARD);
         transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
-        shooterP = new Shooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
-        shooterN = new Shooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
+        shooterP = new Shooter(hardwareMap, "PollenMotor", RUN_USING_ENCODER, REVERSE);
+        shooterN = new Shooter(hardwareMap, "NectarMotor", RUN_USING_ENCODER, REVERSE);
+        gateP = new Gates(hardwareMap, "PollenGate");
+        gateN = new Gates(hardwareMap, "NectarGate");
         flower = new Flower(hardwareMap, "FlowerRamp", Servo.Direction.REVERSE);
 
         //config shooters
-        shooterP.setCloseGate(0.269);
-        shooterP.setOpenGate(0.303);
-        shooterN.setCloseGate(0);
-        shooterN.setOpenGate(0.02);
+        gateP.setCloseGate(0.269);
+        gateP.setOpenGate(0.303);
+        gateN.setCloseGate(0);
+        gateN.setOpenGate(0.02);
         flower.setIntakeDown(0.6);
         flower.setIntakeUp(0);
 
@@ -96,8 +101,10 @@ public class MainTeleOp extends OpMode {
 
         intake.intake(lB1, rB1);
         transfer.intake(lB2, rB2);
-        shooterP.shoot(x, y, b, pollenV);
-        shooterN.shoot(l, u, r, nectarV);
+        shooterP.shoot(x, b, pollenV);
+        shooterN.shoot(l, r, nectarV);
+        gateP.ctrlGate(y, a);
+        gateN.ctrlGate(u, d);
         flower.lift(down, up);
 
         telemetry.addData("Pollen V: ", shooterP.getShooterVelocity());
@@ -115,10 +122,12 @@ public class MainTeleOp extends OpMode {
         rB2 = gamepad2.right_bumper;
         x = gamepad2.x;
         b = gamepad2.b;
-        r = gamepad2.dpad_right;
         l = gamepad2.dpad_left;
+        r = gamepad2.dpad_right;
         y = gamepad2.y;
+        a = gamepad2.a;
         u = gamepad2.dpad_up;
+        d = gamepad2.dpad_down;
         down = gamepad1.dpad_down;
         up = gamepad1.dpad_up;
 
