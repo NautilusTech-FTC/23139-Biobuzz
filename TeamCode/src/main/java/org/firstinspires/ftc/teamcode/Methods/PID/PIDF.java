@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class PIDF {
     private double p = 0.0047; //p-value options (best performance - worst performance): 0.0047, 0.0046, 0.00468
     private double i;
-    private double d;
+    private double d;  //d-value options: 0.00002
     private double f = 0.0003; //f-value options: 0.0003, 0.00029, 0.0004
 
     private double error;
@@ -24,7 +24,7 @@ public class PIDF {
     private double output;
 
     //Tuning:
-    double[] stepSizes = {1.0, 0.1, 0.01, 0.001, 0.0001, 0.00001};
+    double[] stepSizes = {1.0, 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001};
     int stepIndex = 3;
 
     ElapsedTime timer = new ElapsedTime();
@@ -93,9 +93,9 @@ public class PIDF {
         telemetry.addData("Target Speed: ", target);
         telemetry.addData("Error: ", error);
         telemetry.addLine("------------------------------------");
-        telemetry.addData("D: ", "%5f", d);
-        telemetry.addData("F: ", "%5f", f);
-        telemetry.addData("Step Size: ", "%5f", stepSizes[stepIndex]);
+        telemetry.addData("D: ", "%6f", d);
+        telemetry.addData("F: ", "%6f", f);
+        telemetry.addData("Step Size: ", "%6f", stepSizes[stepIndex]);
     }
 
 }
