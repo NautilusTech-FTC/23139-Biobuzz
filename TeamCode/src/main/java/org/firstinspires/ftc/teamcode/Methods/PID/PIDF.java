@@ -8,7 +8,7 @@ public class PIDF {
     private double p = 0.0047; //p-value options (best performance - worst performance): 0.0047, 0.0046, 0.00468
     private double i;
     private double d;
-    private double f; //f-value options: 0.0003, 0.00029, 0.0004
+    private double f = 0.0003; //f-value options: 0.0003, 0.00029, 0.0004
 
     private double error;
     private double lastError;
@@ -84,16 +84,16 @@ public class PIDF {
         }
 
         if (vDown2) {
-            p -= stepSizes[stepIndex];
+            d -= stepSizes[stepIndex];
         }
         if (vUp2) {
-            p += stepSizes[stepIndex];
+            d += stepSizes[stepIndex];
         }
 
         telemetry.addData("Target Speed: ", target);
         telemetry.addData("Error: ", error);
         telemetry.addLine("------------------------------------");
-        telemetry.addData("P: ", "%5f", p);
+        telemetry.addData("D: ", "%5f", d);
         telemetry.addData("F: ", "%5f", f);
         telemetry.addData("Step Size: ", "%5f", stepSizes[stepIndex]);
     }
