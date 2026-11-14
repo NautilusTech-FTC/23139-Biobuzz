@@ -88,10 +88,10 @@ public class PIDF {
         }
 
         if (vDown2) {
-            d -= stepSizes[stepIndex];
+            p -= stepSizes[stepIndex];
         }
         if (vUp2) {
-            d += stepSizes[stepIndex];
+            p += stepSizes[stepIndex];
         }
 
         /*telemetry.addData("Target Speed: ", target);
@@ -104,8 +104,8 @@ public class PIDF {
         panels.addData("Target Speed", target);
         panels.addData("Error", error);
         panels.addLine("------------------------------------");
-        panels.addData("D", String.format("%.6f", d));
         panels.addData("F", String.format("%.6f", f));
+        panels.addData("P", String.format("%.6f", p));
         panels.addData("Step Size", String.format("%.6f", stepSizes[stepIndex]));
     }
 
