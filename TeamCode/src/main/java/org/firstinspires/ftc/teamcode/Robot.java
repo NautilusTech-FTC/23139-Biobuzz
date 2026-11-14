@@ -29,7 +29,7 @@ public class Robot {
         public static alliances alliance = alliances.BLUE_ALLIANCE;
         public static drives drive = drives.PEDRO_ROBOT_CENTRIC;
         public static startPositions startPosition = startPositions.SHOOT_POSITION;
-        public static autos auto = autos.PUSH_OTHER_BOT;
+        public static autos auto = autos.SHOOT_AND_PUSH;
         public static Pose autoEndPose = new Pose(0,0,0);
     }
 }
