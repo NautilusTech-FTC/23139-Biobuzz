@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Testing;
 
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -17,6 +19,8 @@ public class TunePIDF extends OpMode {
     private Intake transfer;
     private PIDFShooter shooterP;
     private PIDFShooter shooterN;
+
+    TelemetryManager panels = PanelsTelemetry.INSTANCE.getTelemetry();
 
     double lSY;
     double lSX;
@@ -65,7 +69,8 @@ public class TunePIDF extends OpMode {
         //shooterN.shoot(x, a, b, 940);
 
         //PIDF tuning:
-        telemetry.addData("Shooter Speed: ", shooterP.getShooterVelocity());
+        //telemetry.addData("Shooter Speed: ", shooterP.getShooterVelocity());
+        panels.addData("Shooter Speed: ", shooterP.getShooterVelocity());
 
         shooterP.pidf.tunePIDF(a, down, up, left, right, telemetry);
     }

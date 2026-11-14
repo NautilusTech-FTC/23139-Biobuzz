@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.Methods.PID;
 
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class PIDF {
+    TelemetryManager panels = PanelsTelemetry.INSTANCE.getTelemetry();
+
     private double p = 0.0047; //p-value options (best performance - worst performance): 0.0047, 0.0046, 0.00468
     private double i;
     private double d;  //d-value options: 0.00002
@@ -90,12 +94,19 @@ public class PIDF {
             d += stepSizes[stepIndex];
         }
 
-        telemetry.addData("Target Speed: ", target);
+        /*telemetry.addData("Target Speed: ", target);
         telemetry.addData("Error: ", error);
         telemetry.addLine("------------------------------------");
         telemetry.addData("D: ", "%6f", d);
         telemetry.addData("F: ", "%6f", f);
-        telemetry.addData("Step Size: ", "%6f", stepSizes[stepIndex]);
+        telemetry.addData("Step Size: ", "%6f", stepSizes[stepIndex]);*/
+
+        panels.addData("Target Speed: ", target);
+        panels.addData("Error: ", error);
+        panels.addLine("------------------------------------");
+        panels.addData("D: ", d);
+        panels.addData("F: ", f);
+        panels.addData("Step Size: ", stepSizes[stepIndex]);
     }
 
 }
