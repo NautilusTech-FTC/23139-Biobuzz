@@ -65,6 +65,8 @@ public class Auto extends OpMode {
     private final Pose park3 = poseFactory.of(9.0261, 114.2315, 90);
     private final Pose point5Control1 = poseFactory.of(49.3288, 118.5721, 0);
 
+    private final Pose shootToParkCtrl = poseFactory.of(57.35, 116.66, 270);
+
     Command spinUpWait = waitMs(2000);
     Command shootPause = waitMs(5000);
 
@@ -83,6 +85,23 @@ public class Auto extends OpMode {
                 ivy.pollenOff,
                 ivy.transferOff,
                 follow(follower, mediumPath0())
+        );
+    }
+
+    public Command waitAndShoot() {
+        return sequential(
+                deadline(
+                        spinUpWait,
+                        ivy.pollenOn
+                ),
+                deadline (
+                        shootPause,
+                        ivy.pollenShoot,
+                        ivy.transferOn
+                ),
+                ivy.pollenOff,
+                ivy.transferOff,
+                follow(follower, parkFromShoot())
         );
     }
 
@@ -125,8 +144,8 @@ public class Auto extends OpMode {
         if (Robot.Infoz.auto == Robot.autos.SHOOT_AND_PUSH) {
             schedule(mediumAuto());
         }
-        if (Robot.Infoz.auto == Robot.autos.SHOOT_FLOWER_SHOOT) {
-            schedule(complexAuto());
+        if (Robot.Infoz.auto == Robot.autos.WAIT_AND_SHOOT) {
+            schedule(waitAndShoot());
         }
     }
 
@@ -148,6 +167,10 @@ public class Auto extends OpMode {
             Robot.Infoz.autoEndPose = follower.pose();
         }
 
+    }
+
+    public Path parkFromShoot() {
+        return Paths.curve(secondShoot, shootToParkCtrl, park3);
     }
 
     public Path simplePath0() {

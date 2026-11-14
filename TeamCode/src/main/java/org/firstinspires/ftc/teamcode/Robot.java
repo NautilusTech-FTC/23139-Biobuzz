@@ -14,21 +14,15 @@ public class Robot {
         PEDRO_FIELD_CENTRIC
     }
 
-    public enum startPositions {
-        NEXT_TO_PARK,
-        SHOOT_POSITION
-    }
-
     public enum autos {
         PUSH_OTHER_BOT,
         SHOOT_AND_PUSH,
-        SHOOT_FLOWER_SHOOT
+        WAIT_AND_SHOOT
     }
 
     public static class Infoz {
         public static alliances alliance = alliances.BLUE_ALLIANCE;
         public static drives drive = drives.PEDRO_ROBOT_CENTRIC;
-        public static startPositions startPosition = startPositions.SHOOT_POSITION;
         public static autos auto = autos.SHOOT_AND_PUSH;
         public static Pose autoEndPose = new Pose(0,0,0);
     }
