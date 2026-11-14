@@ -36,7 +36,8 @@ public class Auto extends OpMode {
 
     private final PoseFactory poseFactory = PoseFactory.degrees();
 
-    private final Pose shootStart = poseFactory.of(56, 8, 90);
+    private final Pose shootStart = poseFactory.of(53.8, 7.5, 90);
+    private final Pose shootPos = poseFactory.of(58.81, 10.28, 90);
 
     //Friendly push
     private final Pose start = poseFactory.of(8.6274, 60.1099, 90);
@@ -48,7 +49,7 @@ public class Auto extends OpMode {
     private final Pose park2Control1 = poseFactory.of(32.3829, 44.9207, 0);
     private final Pose park2Control2 = poseFactory.of(13.4541, 24.9694, 0);
 
-    //More complicated auto
+    //More complicated auto (NEEDS FLOWERS)
     private final Pose gardenIntake = poseFactory.of(9.7063, 8.0261, 178.4579);
     private final Pose gardenIntakeControl1 = poseFactory.of(55.0198, 24.4081, 0);
     private final Pose gardenIntakeControl2 = poseFactory.of(36.7649, 7.1198, 0);
@@ -56,18 +57,26 @@ public class Auto extends OpMode {
     private final Pose secondShootControl1 = poseFactory.of(31.0234, 44.6153, 0);
     private final Pose secondShootControl2 = poseFactory.of(8.9468, 109.0901, 0);
     private final Pose secondShootControl3 = poseFactory.of(63.4901, 110.7874, 0);
+
     private final Pose flowerIntake = poseFactory.of(45.2126, 128.5234, 86.9874);
     private final Pose flowerIntakeControl1 = poseFactory.of(58.9153, 113.9739, 0);
     private final Pose flowerIntakeControl2 = poseFactory.of(87.0081, 105.0505, 0);
     private final Pose flowerIntakeControl3 = poseFactory.of(42.9614, 98.1646, 0);
     private final Pose park3 = poseFactory.of(9.0261, 114.2315, 90);
     private final Pose point5Control1 = poseFactory.of(49.3288, 118.5721, 0);
+
+    Command spinUpWait = waitMs(2000);
     Command shootPause = waitMs(5000);
+
     public Command mediumAuto() {
         return sequential(
+                follow(follower, startToShoot()),
                 deadline(
+                        spinUpWait,
+                        ivy.pollenOn
+                        ),
+                deadline (
                         shootPause,
-                        ivy.pollenOn,
                         ivy.pollenShoot,
                         ivy.transferOn
                 ),
@@ -109,9 +118,7 @@ public class Auto extends OpMode {
         Scheduler.reset();
         follower = Constants.create(hardwareMap);
         follower.setPose(shootStart);
-        follower.update();
         ivy.init(hardwareMap);
-
         if (Robot.Infoz.auto == Robot.autos.PUSH_OTHER_BOT) {
             schedule(follow(follower, simplePath0()));
         }
@@ -123,10 +130,14 @@ public class Auto extends OpMode {
         }
     }
 
+    public void run () {
+
+    }
+
     @Override
     public void loop () {
-        follower.update();
         Scheduler.execute();
+        follower.update();
     }
 
     @Override
@@ -137,6 +148,8 @@ public class Auto extends OpMode {
     public Path simplePath0() {
         return Paths.line(start, path1).constant(path1);
     }
+
+    public Path startToShoot() { return Paths.line(shootStart, shootPos).constant(shootPos); }
 
     public Path mediumPath0() {
         return Paths.curve(shootStart, park2Control1, park2Control2, park2).constant(park2);
