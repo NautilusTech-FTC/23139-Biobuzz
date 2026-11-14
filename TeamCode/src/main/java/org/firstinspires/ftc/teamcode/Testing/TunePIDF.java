@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
 
+import android.text.Spannable;
+
 import org.firstinspires.ftc.teamcode.Methods.DriveTrain;
 import org.firstinspires.ftc.teamcode.Methods.Intake;
 import org.firstinspires.ftc.teamcode.Methods.PIDFShooter;
@@ -55,6 +57,7 @@ public class TunePIDF extends OpMode {
 
         shooterP.setCloseGate(0.269);
         shooterP.setOpenGate(0.303);
+        shooterP.pidf.setPIDF(0.0047, 0, 0.000019, 0.0003);
         shooterN.setCloseGate(0);
         shooterN.setOpenGate(0.02);
     }
@@ -65,14 +68,15 @@ public class TunePIDF extends OpMode {
         intake.intake(lB1, rB1);
         transfer.intake(lB2, rB2);
         drive.operate(lSY, lSX, rSX, rT);
-        shooterP.shoot(x, y, b, 920);
-        //shooterN.shoot(x, a, b, 940);
+        //shooterP.shoot(x, y, b, 920);
+        shooterN.shoot(x, y, b, 940);
 
         //PIDF tuning:
         //telemetry.addData("Shooter Speed: ", shooterP.getShooterVelocity());
-        panels.addData("Shooter Speed: ", shooterP.getShooterVelocity());
+        panels.addData("Shooter Speed", shooterN.getShooterVelocity());
 
-        shooterP.pidf.tunePIDF(a, down, up, left, right, telemetry);
+        shooterN.pidf.tunePIDF(a, down, up, left, right, telemetry);
+        panels.update();
     }
 
     private void ctrlVars() {

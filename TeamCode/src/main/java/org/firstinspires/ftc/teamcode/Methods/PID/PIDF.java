@@ -9,10 +9,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class PIDF {
     TelemetryManager panels = PanelsTelemetry.INSTANCE.getTelemetry();
 
-    private double p = 0.0047; //p-value options (best performance - worst performance): 0.0047, 0.0046, 0.00468
+    private double p;
     private double i;
-    private double d;  //d-value options: 0.00002
-    private double f = 0.0003; //f-value options: 0.0003, 0.00029, 0.0004
+    private double d;
+    private double f;
 
     private double error;
     private double lastError;
@@ -101,12 +101,12 @@ public class PIDF {
         telemetry.addData("F: ", "%6f", f);
         telemetry.addData("Step Size: ", "%6f", stepSizes[stepIndex]);*/
 
-        panels.addData("Target Speed: ", target);
-        panels.addData("Error: ", error);
+        panels.addData("Target Speed", target);
+        panels.addData("Error", error);
         panels.addLine("------------------------------------");
-        panels.addData("D: ", d);
-        panels.addData("F: ", f);
-        panels.addData("Step Size: ", stepSizes[stepIndex]);
+        panels.addData("D", String.format("%.6f", d));
+        panels.addData("F", String.format("%.6f", f));
+        panels.addData("Step Size", String.format("%.6f", stepSizes[stepIndex]));
     }
 
 }

@@ -54,7 +54,7 @@ public class PIDFShooter {
         }
 
         if (stop && !start) {
-            pidf.setTarget(0);
+            shooter.setVelocity(0);
             shooterOn = false;
             gate.setPosition(closeGate);
         }
