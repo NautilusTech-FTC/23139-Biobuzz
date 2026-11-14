@@ -69,7 +69,7 @@ public class TunePIDF extends OpMode {
         transfer.intake(lB2, rB2);
         drive.operate(lSY, lSX, rSX, rT);
         //shooterP.shoot(x, y, b, 920);
-        shooterN.shoot(x, y, b, 940);
+        shooterN.shoot(x, b, 940);
 
         //PIDF tuning:
         //telemetry.addData("Shooter Speed: ", shooterP.getShooterVelocity());
