@@ -18,10 +18,10 @@ import org.opencv.core.Mat;
 import java.util.List;
 
 public class AprilTag {
-    private Position cameraPosition = new Position(DistanceUnit.INCH,
-            0, 0, 0, 0);
-    private YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
-            0, -90, 0, 0);
+    Position cameraPosition = new Position(DistanceUnit.MM,
+            16.50000, 208.23815, 304.160, 0);
+    YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
+            0, -60, 0, 0);
 
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;

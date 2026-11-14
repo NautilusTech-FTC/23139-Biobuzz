@@ -142,7 +142,12 @@ public class Auto extends OpMode {
 
     @Override
     public void stop () {
-        Robot.Infoz.autoEndPose = follower.pose();
+        if (Robot.Infoz.alliance == Robot.alliances.BLUE_ALLIANCE) { //Invert pose if blue
+            Robot.Infoz.autoEndPose = poseFactory.of(141.5,141.5, 180).minus(follower.pose());
+        } else {
+            Robot.Infoz.autoEndPose = follower.pose();
+        }
+
     }
 
     public Path simplePath0() {

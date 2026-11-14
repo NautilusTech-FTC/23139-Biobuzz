@@ -50,11 +50,14 @@ public class PIDFShooter {
         }
 
         if (stop && !start) {
-            shooter.setVelocity(0);
             shooterOn = false;
         }
+        if (shooterOn) {
+            shooter.setPower(pidf.runPIDF(getShooterVelocity()));
+        } else {
+            shooter.setPower(0);
+        }
 
-        shooter.setPower(pidf.runPIDF(getShooterVelocity()));
 
     }
 

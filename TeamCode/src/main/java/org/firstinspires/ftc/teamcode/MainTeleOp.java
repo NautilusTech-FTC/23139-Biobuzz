@@ -16,10 +16,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
 
+import static org.firstinspires.ftc.teamcode.AprilTag.hiveTip;
+
 import org.firstinspires.ftc.teamcode.Methods.DriveTrain;
 import org.firstinspires.ftc.teamcode.Methods.Flower;
 import org.firstinspires.ftc.teamcode.Methods.Gates;
 import org.firstinspires.ftc.teamcode.Methods.Intake;
+import org.firstinspires.ftc.teamcode.Methods.PIDFShooter;
 import org.firstinspires.ftc.teamcode.Methods.Shooter;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
@@ -30,9 +33,11 @@ public class MainTeleOp extends OpMode {
     private DriveTrain drive;
     private Intake intake;
     private Intake transfer;
-    private Shooter shooterP;
+    private PIDFShooter shooterP;
     private Shooter shooterN;
     private Flower flower;
+
+    private AprilTag aprilTag = new AprilTag();
 
     private Follower follower;
 
@@ -63,13 +68,14 @@ public class MainTeleOp extends OpMode {
 
         intake = new Intake(hardwareMap, "IntakeMotor", FORWARD);
         transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
-        shooterP = new Shooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
+        shooterP = new PIDFShooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
         shooterN = new Shooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
         flower = new Flower(hardwareMap, "FlowerRamp", Servo.Direction.REVERSE);
 
         //config shooters
         shooterP.setCloseGate(0.269);
         shooterP.setOpenGate(0.303);
+        shooterP.pidf.setPIDF(0.0047, 0, 0.000019, 0.0003);
         shooterN.setCloseGate(0);
         shooterN.setOpenGate(0.02);
         flower.setIntakeDown(0.6);
@@ -84,6 +90,8 @@ public class MainTeleOp extends OpMode {
 
         field.setOffsets(PanelsField.INSTANCE.getPresets().getPEDRO_PATHING());
         field.setStyle("red", "blue", 2.0);
+
+        aprilTag.init(hardwareMap);
 
 
 
@@ -150,21 +158,21 @@ public class MainTeleOp extends OpMode {
 
         Pose pose = follower.pose();
         //TODO: make this changed based off of team and hive position
-        double targetX = 57.9;
-        double targetY = 51;
-        telemetry.addData("Pose x", pose.x());
-        telemetry.addData("Pose y", pose.y());
-        telemetry.addData("Target x", targetX);
-        telemetry.addData("Pose y", targetY);
 
-        telemetry.addData("Heading", pose.heading());
+
+        aprilTag.setHiveTip();
+
+        double targetX = Robot.Infoz.alliance == Robot.alliances.RED_ALLIANCE ? 58 : 83.5;
+        double targetY = aprilTag.currentTip == hiveTip.AUDIENCE_SIDE_UP ? 90.5 : 51;
+
+        telemetry.addData("tip", aprilTag.currentTip);
 
         if(aimButton) {
 
             //Aim code will overwrite powers
             double angle = Math.atan2(targetY-pose.y(), targetX-pose.x());
             telemetry.addData("heading angle", angle);
-            powers = ManualDrive.headingLock(follower, Constants.foresightConfig.headingFeedback.get(), powers, angle);
+            powers = ManualDrive.headingLock(follower, Controller.proportional(.75), powers, angle);
         }
         ManualDrive.driveOrHold(follower, powers);
 
