@@ -39,16 +39,16 @@ public class IvySubsystems {
         //Hardware Maps
         intake = new Intake(hardwareMap, "IntakeMotor", FORWARD);
         transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
-        shooterP = new Shooter(hardwareMap, "PollenMotor", RUN_USING_ENCODER, REVERSE);
-        shooterN = new Shooter(hardwareMap, "NectarMotor", RUN_USING_ENCODER, REVERSE);
+        shooterP = new Shooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
+        shooterN = new Shooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
         gateP = new Gates(hardwareMap, "PollenGate");
         gateN = new Gates(hardwareMap, "NectarGate");
         flower = new Flower(hardwareMap, "FlowerRamp", Servo.Direction.REVERSE);
 
-        gateP.setCloseGate(0.269);
-        gateP.setOpenGate(0.303);
-        gateN.setCloseGate(0);
-        gateN.setOpenGate(0.02);
+        shooterP.setCloseGate(0.269);
+        shooterP.setOpenGate(0.303);
+        shooterN.setCloseGate(0);
+        shooterN.setOpenGate(0.02);
         flower.setIntakeDown(0.6);
         flower.setIntakeUp(0);
 
@@ -99,18 +99,16 @@ public class IvySubsystems {
         pollenOn = Command.build()
                 .setExecute(() -> {
                     shooterP.shoot(true, false, 940);
-                    gateP.ctrlGate(false, true);
                 });
         pollenShoot = Command.build()
                 .setStart(() -> {
-                    shooterP.shoot(true, false, 940);
-                    gateP.ctrlGate(true, false);
+                    shooterP.ctrlGate(true, false);
                 })
                 .setDone(() -> true);
         pollenOff = Command.build()
                 .setStart(() -> {
                     shooterP.shoot(false, true, 1300);
-                    gateP.ctrlGate(false, true);
+                    shooterP.ctrlGate(false, true);
                 })
                 .setDone(() -> true);
 

@@ -32,8 +32,6 @@ public class MainTeleOp extends OpMode {
     private Intake transfer;
     private Shooter shooterP;
     private Shooter shooterN;
-    private Gates gateP;
-    private Gates gateN;
     private Flower flower;
 
     private Follower follower;
@@ -54,7 +52,6 @@ public class MainTeleOp extends OpMode {
     public static double nectarV = 940;
 
     private Robot.drives driveMode = Robot.drives.PEDRO_ROBOT_CENTRIC;
-    Controller headingController = Controller.proportional(4.026386699615236);
     FieldManager field = PanelsField.INSTANCE.getField();
 
     public void init() {
@@ -66,17 +63,15 @@ public class MainTeleOp extends OpMode {
 
         intake = new Intake(hardwareMap, "IntakeMotor", FORWARD);
         transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
-        shooterP = new Shooter(hardwareMap, "PollenMotor", RUN_USING_ENCODER, REVERSE);
-        shooterN = new Shooter(hardwareMap, "NectarMotor", RUN_USING_ENCODER, REVERSE);
-        gateP = new Gates(hardwareMap, "PollenGate");
-        gateN = new Gates(hardwareMap, "NectarGate");
+        shooterP = new Shooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
+        shooterN = new Shooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
         flower = new Flower(hardwareMap, "FlowerRamp", Servo.Direction.REVERSE);
 
         //config shooters
-        gateP.setCloseGate(0.269);
-        gateP.setOpenGate(0.303);
-        gateN.setCloseGate(0);
-        gateN.setOpenGate(0.02);
+        shooterP.setCloseGate(0.269);
+        shooterP.setOpenGate(0.303);
+        shooterN.setCloseGate(0);
+        shooterN.setOpenGate(0.02);
         flower.setIntakeDown(0.6);
         flower.setIntakeUp(0);
 
@@ -103,8 +98,8 @@ public class MainTeleOp extends OpMode {
         transfer.intake(lB2, rB2);
         shooterP.shoot(x, b, pollenV);
         shooterN.shoot(l, r, nectarV);
-        gateP.ctrlGate(y, a);
-        gateN.ctrlGate(u, d);
+        shooterP.ctrlGate(y, a);
+        shooterN.ctrlGate(u, d);
         flower.lift(down, up);
 
         telemetry.addData("Pollen V: ", shooterP.getShooterVelocity());
@@ -163,19 +158,20 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("Pose y", targetY);
 
         telemetry.addData("Heading", pose.heading());
-        telemetry.addData("controller", headingController);
 
         if(aimButton) {
 
             //Aim code will overwrite powers
-            double angle = Math.atan2(targetX-pose.x(), targetY-pose.y());
+            double angle = Math.atan2(targetY-pose.y(), targetX-pose.x());
             telemetry.addData("heading angle", angle);
-            powers = ManualDrive.headingLock(follower, headingController, powers, angle);
+            powers = ManualDrive.headingLock(follower, Constants.foresightConfig.headingFeedback.get(), powers, angle);
         }
         ManualDrive.driveOrHold(follower, powers);
 
         field.moveCursor(pose.x(), pose.y());
+        field.circle(3);
         field.line(targetX, targetY);
+        field.update();
 
         follower.update();
     }
