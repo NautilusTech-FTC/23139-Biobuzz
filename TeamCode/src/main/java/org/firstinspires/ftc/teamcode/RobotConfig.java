@@ -7,12 +7,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 public class RobotConfig extends OpMode {
     Robot.alliances alSelect;
     Robot.drives dSelect;
-    Robot.startPositions sSelect;
+    //Robot.startPositions sSelect;
     Robot.autos auSelect;
 
     Robot.alliances[] alliances = Robot.alliances.values();
     Robot.drives[] drives = Robot.drives.values();
-    Robot.startPositions[] startPositions = Robot.startPositions.values();
+    //Robot.startPositions[] startPositions = Robot.startPositions.values();
     Robot.autos[] autos = Robot.autos.values();
 
     int horizontalSelection = 0;
@@ -40,19 +40,19 @@ public class RobotConfig extends OpMode {
             telemetry.addData("drive: ", dSelect);
         }
 
-        if (verticalSelection == 2) {
+        /*if (verticalSelection == 2) {
             telemetry.addData("> start position: ", sSelect);
         } else {
             telemetry.addData("start position: ", sSelect);
-        }
+        }*/
 
-        if (verticalSelection == 3) {
+        if (verticalSelection == 2) {
             telemetry.addData("> auto: ", auSelect);
         } else {
             telemetry.addData("auto: ", auSelect);
         }
 
-        if (verticalSelection == 4) {
+        if (verticalSelection == 3) {
             telemetry.addData("Selection complete!", "Press START to submit or B to restart");
             if (gamepad1.b) {
                 verticalSelection = 0;
@@ -64,7 +64,7 @@ public class RobotConfig extends OpMode {
     public void start() {
         Robot.Infoz.alliance = alSelect;
         Robot.Infoz.drive = dSelect;
-        Robot.Infoz.startPosition = sSelect;
+        //Robot.Infoz.startPosition = sSelect;
         Robot.Infoz.auto = auSelect;
         telemetry.addData("Everything's submitted!", "Next match is gonna be great!");
     }
@@ -96,12 +96,12 @@ public class RobotConfig extends OpMode {
                 }
                 dSelect = drives[(horizontalSelection % drives.length)];
                 break;
-            case 2:
+            /*case 2:
                 if (horizontalSelection < 0) {
                     horizontalSelection = startPositions.length - 1;
                 }
                 sSelect = startPositions[(horizontalSelection % startPositions.length)];
-                break;
+                break;*/
             case 3:
                 if (horizontalSelection < 0) {
                     horizontalSelection = autos.length - 1;
@@ -114,7 +114,7 @@ public class RobotConfig extends OpMode {
     void changeSelectionArea () {
         if (gamepad1.aWasPressed()) {
             horizontalSelection = 0;
-            if (verticalSelection < 4) {
+            if (verticalSelection < 3) {
                 verticalSelection++;
             }
         }
