@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Methods.Flower;
-import org.firstinspires.ftc.teamcode.Methods.Gates;
 import org.firstinspires.ftc.teamcode.Methods.Intake;
 import org.firstinspires.ftc.teamcode.Methods.Shooter;
 
@@ -19,8 +18,6 @@ public class IvySubsystems {
     private Intake transfer;
     private Shooter shooterP;
     private Shooter shooterN;
-    private Gates gateP;
-    private Gates gateN;
     public Command flowerDown;
     public Command flowerUp;
     public Command intakeOn;
@@ -41,8 +38,6 @@ public class IvySubsystems {
         transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
         shooterP = new Shooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
         shooterN = new Shooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
-        gateP = new Gates(hardwareMap, "PollenGate");
-        gateN = new Gates(hardwareMap, "NectarGate");
         flower = new Flower(hardwareMap, "FlowerRamp", Servo.Direction.REVERSE);
 
         shooterP.setCloseGate(0.269);
@@ -116,18 +111,18 @@ public class IvySubsystems {
         nectarOn = Command.build()
                 .setExecute(() -> {
                     shooterN.shoot(true, false, 1300);
-                    gateN.ctrlGate(false, true);
+                    shooterN.ctrlGate(false, true);
                 });
         nectarShoot = Command.build()
                 .setStart(() -> {
                     shooterN.shoot(false, false, 1300);
-                    gateN.ctrlGate(true, false);
+                    shooterN.ctrlGate(true, false);
                 })
                 .setDone(() -> true);
         nectarOff = Command.build()
                 .setStart(() -> {
                     shooterN.shoot(false, true, 1300);
-                    gateN.ctrlGate(false, true);
+                    shooterN.ctrlGate(false, true);
                 })
                 .setDone(() -> true);
     }

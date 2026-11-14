@@ -57,7 +57,8 @@ public class TunePIDF extends OpMode {
 
         shooterP.setCloseGate(0.269);
         shooterP.setOpenGate(0.303);
-        shooterP.pidf.setPIDF(0.0047, 0, 0.000019, 0.0003);
+        shooterP.pidf.setPIDF(0.00125, 0, 0.00003, 0.0004225);
+        shooterN.pidf.setPIDF(0.0012, 0, 0, 0.0004225);
         shooterN.setCloseGate(0);
         shooterN.setOpenGate(0.02);
     }
@@ -68,14 +69,14 @@ public class TunePIDF extends OpMode {
         intake.intake(lB1, rB1);
         transfer.intake(lB2, rB2);
         drive.operate(lSY, lSX, rSX, rT);
-        //shooterP.shoot(x, y, b, 920);
-        shooterN.shoot(x, b, 940);
+        shooterP.shoot(x, b, 920);
+        //shooterN.shoot(x, b, 940);
 
         //PIDF tuning:
         //telemetry.addData("Shooter Speed: ", shooterP.getShooterVelocity());
-        panels.addData("Shooter Speed", shooterN.getShooterVelocity());
+        panels.addData("Shooter Speed", shooterP.getShooterVelocity());
 
-        shooterN.pidf.tunePIDF(a, down, up, left, right, telemetry);
+        shooterP.pidf.tunePIDF(a, down, up, left, right, telemetry);
         panels.update();
     }
 

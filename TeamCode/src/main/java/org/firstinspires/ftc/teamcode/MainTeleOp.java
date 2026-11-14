@@ -4,7 +4,6 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.field.FieldManager;
 import com.bylazar.field.PanelsField;
 import com.pedropathing.controllers.Controller;
-import com.pedropathing.controllers.PIDController;
 import com.pedropathing.drivetrain.DrivePowers;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.ManualDrive;
@@ -20,7 +19,6 @@ import static org.firstinspires.ftc.teamcode.AprilTag.hiveTip;
 
 import org.firstinspires.ftc.teamcode.Methods.DriveTrain;
 import org.firstinspires.ftc.teamcode.Methods.Flower;
-import org.firstinspires.ftc.teamcode.Methods.Gates;
 import org.firstinspires.ftc.teamcode.Methods.Intake;
 import org.firstinspires.ftc.teamcode.Methods.PIDFShooter;
 import org.firstinspires.ftc.teamcode.Methods.Shooter;
@@ -29,12 +27,11 @@ import org.firstinspires.ftc.teamcode.pedro.Constants;
 @Configurable
 @TeleOp
 public class MainTeleOp extends OpMode {
-    private final PanelsField instance = PanelsField.INSTANCE;
     private DriveTrain drive;
     private Intake intake;
     private Intake transfer;
     private PIDFShooter shooterP;
-    private Shooter shooterN;
+    private PIDFShooter shooterN;
     private Flower flower;
 
     private AprilTag aprilTag = new AprilTag();
@@ -69,15 +66,16 @@ public class MainTeleOp extends OpMode {
         intake = new Intake(hardwareMap, "IntakeMotor", FORWARD);
         transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
         shooterP = new PIDFShooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
-        shooterN = new Shooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
+        shooterN = new PIDFShooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
         flower = new Flower(hardwareMap, "FlowerRamp", Servo.Direction.REVERSE);
 
         //config shooters
         shooterP.setCloseGate(0.269);
         shooterP.setOpenGate(0.303);
-        shooterP.pidf.setPIDF(0.0047, 0, 0.000019, 0.0003);
+        shooterP.pidf.setPIDF(0.00125, 0, 0.00003, 0.0004225);
         shooterN.setCloseGate(0);
         shooterN.setOpenGate(0.02);
+        shooterN.pidf.setPIDF(0.0012, 0, 0, 0.0004225);
         flower.setIntakeDown(0.6);
         flower.setIntakeUp(0);
 
@@ -99,7 +97,6 @@ public class MainTeleOp extends OpMode {
 
     public void loop() {
         ctrlVars();
-
         drive();
 
         intake.intake(lB1, rB1);
@@ -109,9 +106,6 @@ public class MainTeleOp extends OpMode {
         shooterP.ctrlGate(y, a);
         shooterN.ctrlGate(u, d);
         flower.lift(down, up);
-
-        telemetry.addData("Pollen V: ", shooterP.getShooterVelocity());
-        telemetry.addData("Nectar V: ", shooterN.getShooterVelocity());
     }
 
     private void ctrlVars() {

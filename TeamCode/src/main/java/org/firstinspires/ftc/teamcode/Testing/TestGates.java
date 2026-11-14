@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.Testing;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class TestingGates {
+public class TestGates {
     private Servo pollenGate;
     private Servo nectarGate;
 
