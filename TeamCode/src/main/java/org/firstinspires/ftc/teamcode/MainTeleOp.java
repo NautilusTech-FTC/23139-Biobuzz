@@ -50,7 +50,7 @@ public class MainTeleOp extends OpMode {
     boolean down;
     boolean up;
 
-    public static double pollenV = 920;
+    public static double pollenV = 900;
     public static double nectarV = 940;
 
     private Robot.drives driveMode = Robot.drives.PEDRO_ROBOT_CENTRIC;
@@ -72,7 +72,7 @@ public class MainTeleOp extends OpMode {
         //config shooters
         shooterP.setCloseGate(0.269);
         shooterP.setOpenGate(0.303);
-        shooterP.pidf.setPIDF(0.00125, 0, 0.00003, 0.0004225);
+        shooterP.pidf.setPIDF(0.00122, 0, 0.00003, 0.0004225);
         shooterN.setCloseGate(0);
         shooterN.setOpenGate(0.02);
         shooterN.pidf.setPIDF(0.0012, 0, 0, 0.0004225);

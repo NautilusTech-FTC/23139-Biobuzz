@@ -10,14 +10,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Methods.Flower;
 import org.firstinspires.ftc.teamcode.Methods.Intake;
+import org.firstinspires.ftc.teamcode.Methods.PIDFShooter;
 import org.firstinspires.ftc.teamcode.Methods.Shooter;
 
 public class IvySubsystems {
     private Flower flower;
     private Intake intake;
     private Intake transfer;
-    private Shooter shooterP;
-    private Shooter shooterN;
+    private PIDFShooter shooterP;
+    private PIDFShooter shooterN;
     public Command flowerDown;
     public Command flowerUp;
     public Command intakeOn;
@@ -36,14 +37,16 @@ public class IvySubsystems {
         //Hardware Maps
         intake = new Intake(hardwareMap, "IntakeMotor", FORWARD);
         transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
-        shooterP = new Shooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
-        shooterN = new Shooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
+        shooterP = new PIDFShooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
+        shooterN = new PIDFShooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
         flower = new Flower(hardwareMap, "FlowerRamp", Servo.Direction.REVERSE);
 
         shooterP.setCloseGate(0.269);
         shooterP.setOpenGate(0.303);
+        shooterP.pidf.setPIDF(0.00122, 0, 0.00003, 0.0004225);
         shooterN.setCloseGate(0);
         shooterN.setOpenGate(0.02);
+        shooterN.pidf.setPIDF(0.0012, 0, 0, 0.0004225);
         flower.setIntakeDown(0.6);
         flower.setIntakeUp(0);
 
@@ -93,7 +96,7 @@ public class IvySubsystems {
         //Pollen Shooter Commands
         pollenOn = Command.build()
                 .setExecute(() -> {
-                    shooterP.shoot(true, false, 940);
+                    shooterP.shoot(true, false, 900);
                 });
         pollenShoot = Command.build()
                 .setStart(() -> {
@@ -102,7 +105,7 @@ public class IvySubsystems {
                 .setDone(() -> true);
         pollenOff = Command.build()
                 .setStart(() -> {
-                    shooterP.shoot(false, true, 1300);
+                    shooterP.shoot(false, true, 900);
                     shooterP.ctrlGate(false, true);
                 })
                 .setDone(() -> true);

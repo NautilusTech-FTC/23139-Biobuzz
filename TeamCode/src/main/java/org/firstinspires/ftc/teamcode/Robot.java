@@ -8,6 +8,11 @@ public class Robot {
         BLUE_ALLIANCE
     }
 
+    public enum startPositions {
+        START_POS,
+        SHOOTOS
+    }
+
     public enum drives {
         ROBOT_CENTRIC,
         PEDRO_ROBOT_CENTRIC,
@@ -23,6 +28,7 @@ public class Robot {
     public static class Infoz {
         public static alliances alliance = alliances.BLUE_ALLIANCE;
         public static drives drive = drives.PEDRO_ROBOT_CENTRIC;
+        public static startPositions startPosition = startPositions.START_POS;
         public static autos auto = autos.SHOOT_AND_PUSH;
         public static Pose autoEndPose = new Pose(0,0,0);
     }

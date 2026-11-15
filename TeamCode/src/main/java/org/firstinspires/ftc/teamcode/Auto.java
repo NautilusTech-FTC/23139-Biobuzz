@@ -45,9 +45,9 @@ public class Auto extends OpMode {
 
 
     //Shoot 'n park (medium complexity auto)
-    private final Pose park2 = poseFactory.of(10.7658, 98.8414, 0);
-    private final Pose park2Control1 = poseFactory.of(32.3829, 44.9207, 0);
-    private final Pose park2Control2 = poseFactory.of(13.4541, 24.9694, 0);
+    private final Pose park2 = poseFactory.of(11.54, 98.8414, 0);
+    private final Pose park2Control1 = poseFactory.of(16.2, 41.36, 0);
+    private final Pose park2Control2 = poseFactory.of(1.04, 58.38, 0);
 
     //More complicated auto (NEEDS FLOWERS)
     private final Pose gardenIntake = poseFactory.of(9.7063, 8.0261, 178.4579);
@@ -69,6 +69,7 @@ public class Auto extends OpMode {
 
     Command spinUpWait = waitMs(2000);
     Command shootPause = waitMs(5000);
+    Command waitTillShoot = waitMs(15000);
 
     public Command mediumAuto() {
         return sequential(
@@ -90,6 +91,7 @@ public class Auto extends OpMode {
 
     public Command waitAndShoot() {
         return sequential(
+                waitTillShoot,
                 deadline(
                         spinUpWait,
                         ivy.pollenOn
