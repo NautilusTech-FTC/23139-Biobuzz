@@ -9,10 +9,12 @@ import com.pedropathing.drivetrain.DrivePowers;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.ManualDrive;
 import com.pedropathing.math.Pose;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
@@ -21,9 +23,10 @@ import static org.firstinspires.ftc.teamcode.AprilTag.hiveTip;
 
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Flower;
-import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.PIDFShooter;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
+
+import java.util.List;
 
 @Configurable
 @TeleOp
@@ -37,21 +40,22 @@ public class MainTeleOp extends OpMode {
     private DcMotor transfer;
 
     private AprilTag aprilTag = new AprilTag();
-
     private Follower follower;
 
-    double strafeY, strafeX, pivotBot;
 
-    double brakeTrigger;
-    boolean intakeTrigger, outtakeTrigger;
-    double transInTrigger, transOutTrigger;
+    private double strafeY, strafeX, pivotBot;
 
-    boolean pollenToggle, pollenOn, nectarToggle,  nectarOn, pollenOpen, pollenClose, nectarOpen, nectarClose;
-    boolean aimButton;
-    double pollenCooldown, nectarCooldown;
+    private double brakeTrigger;
+    private boolean intakeTrigger, outtakeTrigger;
+    private double transInTrigger, transOutTrigger;
 
-    boolean flowerDeploy;
-    boolean flowerLift;
+    private boolean pollenToggle, pollenOn, nectarToggle,  nectarOn, pollenOpen, pollenClose, nectarOpen, nectarClose;
+    private boolean aimButton;
+    private double pollenCooldown, nectarCooldown;
+
+    private boolean flowerDeploy;
+    private boolean flowerLift;
+
 
     public static double pollenV = 900;
     public static double nectarV = 940;
@@ -59,11 +63,18 @@ public class MainTeleOp extends OpMode {
     private double runTime;
 
     private Robot.drives driveMode = Robot.drives.PEDRO_ROBOT_CENTRIC;
-    FieldManager field = PanelsField.INSTANCE.getField();
+    private FieldManager field = PanelsField.INSTANCE.getField();
     private final PoseFactory poseFactory = PoseFactory.degrees();
+
+    private List<LynxModule> allHubs;
 
     @Override
     public void init() {
+        allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
         //instance subsystems:
         drive = new DriveTrain(
                 hardwareMap,
@@ -104,8 +115,14 @@ public class MainTeleOp extends OpMode {
 
     }
 
+    ElapsedTime loopTimer = new ElapsedTime(); //loop time calc
+
     @Override
     public void loop() {
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
+
         ctrlVars();
         macrosAndToggles();
         drive();
@@ -118,9 +135,11 @@ public class MainTeleOp extends OpMode {
         shooterP.shoot(pollenOn, !pollenOn, pollenV);
         shooterN.shoot(nectarOn, !nectarOn, nectarV);
 
-        shooterP.ctrlGate(pollenOpen, pollenClose);
-        shooterN.ctrlGate(nectarOpen, nectarClose);
+        shooterP.ctrlGate(pollenOpen, !pollenOpen);
+        shooterN.ctrlGate(nectarOpen, !nectarOpen);
         flower.lift(flowerDeploy, flowerLift);
+        telemetry.addData("Loop Time (ms)", loopTimer.milliseconds());
+        loopTimer.reset();
     }
 
     private void ctrlVars() {
@@ -132,13 +151,10 @@ public class MainTeleOp extends OpMode {
         outtakeTrigger = gamepad1.right_bumper;
         transInTrigger = gamepad2.left_trigger;
         transOutTrigger = gamepad2.right_trigger;
-        pollenToggle = gamepad2.xWasPressed();
-        nectarToggle = gamepad2.dpadLeftWasPressed();
-        nectarOn = gamepad2.dpad_right;
-        pollenOpen = gamepad2.y;
-        pollenClose = gamepad2.a;
-        nectarOpen = gamepad2.dpad_up;
-        nectarClose = gamepad2.dpad_down;
+        pollenToggle = gamepad2.yWasPressed();
+        nectarToggle = gamepad2.xWasPressed();
+        pollenOpen = gamepad2.b;
+        nectarOpen = gamepad2.a;
         flowerDeploy = gamepad1.dpad_down;
         flowerLift = gamepad1.dpad_up;
         aimButton = gamepad1.a;
@@ -153,7 +169,6 @@ public class MainTeleOp extends OpMode {
             pollenOn = !pollenOn; //Toggle pollen
 
             nectarOn = !pollenOn && nectarOn; //Turn nectar off if pollen is on
-            nectarClose = pollenOn; //Close nectar gate if pollen is on
         }
 
         if (nectarToggle & (nectarCooldown < runTime)) {
@@ -162,7 +177,6 @@ public class MainTeleOp extends OpMode {
             nectarOn = !nectarOn;
 
             pollenOn = !nectarOn && pollenOn; //Turn pollen off if nectar is on
-            pollenClose = nectarOn; //Close pollen gate if nectar is on
         }
     }
 
@@ -177,7 +191,7 @@ public class MainTeleOp extends OpMode {
     }
 
     private void transfer() { //transfer function
-        transfer.setPower(transInTrigger-transOutTrigger);
+        transfer.setPower(intakeTrigger ? 1 : transInTrigger-transOutTrigger);
     }
 
 
@@ -207,13 +221,13 @@ public class MainTeleOp extends OpMode {
         double targetX = Robot.Infoz.alliance == Robot.alliances.RED_ALLIANCE ? 58 : 83.5;
         double targetY = aprilTag.currentTip == hiveTip.AUDIENCE_SIDE_UP ? 90.5 : 51;
 
-        telemetry.addData("tip", aprilTag.currentTip);
+        //telemetry.addData("tip", aprilTag.currentTip);
 
         if(aimButton) {
 
             //Aim code will overwrite powers
             double angle = Math.atan2(targetY-pose.y(), targetX-pose.x());
-            telemetry.addData("heading angle", angle);
+            //telemetry.addData("heading angle", angle);
             powers = ManualDrive.headingLock(follower, Controller.proportional(.75), powers, angle);
         }
         ManualDrive.driveOrHold(follower, powers);
