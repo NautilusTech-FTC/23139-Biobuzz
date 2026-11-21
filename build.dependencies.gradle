@@ -24,5 +24,7 @@ dependencies {
     implementation 'com.pedropathing.ivy:pedro:1.1.1'
     implementation "com.bylazar:fullpanels:1.0.20"
 
+    implementation 'com.fasterxml.jackson.jr:jackson-jr-objects:2.18.2'
+
 }
 
