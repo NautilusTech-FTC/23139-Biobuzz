@@ -96,7 +96,7 @@ public class IvySubsystems {
         //Pollen Shooter Commands
         pollenOn = Command.build()
                 .setExecute(() -> {
-                    shooterP.shoot(true, false, 900);
+                    shooterP.shoot(true, false, 920);
                 });
         pollenShoot = Command.build()
                 .setStart(() -> {
