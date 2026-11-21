@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.field.FieldManager;
 import com.bylazar.field.PanelsField;
+import com.pedropathing.api.PoseFactory;
 import com.pedropathing.controllers.Controller;
 import com.pedropathing.drivetrain.DrivePowers;
 import com.pedropathing.follower.Follower;
@@ -54,7 +55,9 @@ public class MainTeleOp extends OpMode {
 
     private Robot.drives driveMode = Robot.drives.PEDRO_ROBOT_CENTRIC;
     FieldManager field = PanelsField.INSTANCE.getField();
+    private final PoseFactory poseFactory = PoseFactory.degrees();
 
+    @Override
     public void init() {
         //instance subsystems:
         drive = new DriveTrain(
@@ -94,6 +97,7 @@ public class MainTeleOp extends OpMode {
 
     }
 
+    @Override
     public void loop() {
         ctrlVars();
         drive();
@@ -173,5 +177,15 @@ public class MainTeleOp extends OpMode {
         field.update();
 
         follower.update();
+    }
+
+    @Override
+    public void stop () {
+        if (Robot.Infoz.alliance == Robot.alliances.BLUE_ALLIANCE) { //Invert pose if blue
+            Robot.Infoz.autoEndPose = poseFactory.of(141.5,141.5, 180).minus(follower.pose());
+        } else {
+            Robot.Infoz.autoEndPose = follower.pose();
+        }
+
     }
 }
