@@ -21,7 +21,6 @@ import org.firstinspires.ftc.teamcode.Methods.DriveTrain;
 import org.firstinspires.ftc.teamcode.Methods.Flower;
 import org.firstinspires.ftc.teamcode.Methods.Intake;
 import org.firstinspires.ftc.teamcode.Methods.PIDFShooter;
-import org.firstinspires.ftc.teamcode.Methods.Shooter;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @Configurable
@@ -38,17 +37,17 @@ public class MainTeleOp extends OpMode {
 
     private Follower follower;
 
-    double lSY,lSX,rSX;
+    double strafeY, strafeX, pivotBot;
 
-    double rT;
-    boolean lB1,rB1;
-    boolean lB2,rB2;
+    double brakeTrigger;
+    boolean intakeTrigger, outtakeTrigger;
+    boolean transInTrigger, transOutTrigger;
 
-    boolean x, b, l, r, y, a, u, d;
+    boolean pollenEnable, pollenDisable, nectarEnable, nectarDisable, pollenOpen, pollenClose, nectarOpen, nectarClose;
     boolean aimButton;
 
-    boolean down;
-    boolean up;
+    boolean flowerDeploy;
+    boolean flowerLift;
 
     public static double pollenV = 900;
     public static double nectarV = 940;
@@ -99,34 +98,34 @@ public class MainTeleOp extends OpMode {
         ctrlVars();
         drive();
 
-        intake.intake(lB1, rB1);
-        transfer.intake(lB2, rB2);
-        shooterP.shoot(x, b, pollenV);
-        shooterN.shoot(l, r, nectarV);
-        shooterP.ctrlGate(y, a);
-        shooterN.ctrlGate(u, d);
-        flower.lift(down, up);
+        intake.intake(intakeTrigger, outtakeTrigger);
+        transfer.intake(transInTrigger, transOutTrigger);
+        shooterP.shoot(pollenEnable, pollenDisable, pollenV);
+        shooterN.shoot(nectarEnable, nectarDisable, nectarV);
+        shooterP.ctrlGate(pollenOpen, pollenClose);
+        shooterN.ctrlGate(nectarOpen, nectarClose);
+        flower.lift(flowerDeploy, flowerLift);
     }
 
     private void ctrlVars() {
-        lSY = gamepad1.left_stick_y;
-        lSX = gamepad1.left_stick_x;
-        rSX = gamepad1.right_stick_x;
-        rT = gamepad1.right_trigger;
-        lB1 = gamepad1.left_bumper;
-        rB1 = gamepad1.right_bumper;
-        lB2 = gamepad2.left_bumper;
-        rB2 = gamepad2.right_bumper;
-        x = gamepad2.x;
-        b = gamepad2.b;
-        l = gamepad2.dpad_left;
-        r = gamepad2.dpad_right;
-        y = gamepad2.y;
-        a = gamepad2.a;
-        u = gamepad2.dpad_up;
-        d = gamepad2.dpad_down;
-        down = gamepad1.dpad_down;
-        up = gamepad1.dpad_up;
+        strafeY = gamepad1.left_stick_y;
+        strafeX = gamepad1.left_stick_x;
+        pivotBot = gamepad1.right_stick_x;
+        brakeTrigger = gamepad1.right_trigger;
+        intakeTrigger = gamepad1.left_bumper;
+        outtakeTrigger = gamepad1.right_bumper;
+        transInTrigger = gamepad2.left_bumper;
+        transOutTrigger = gamepad2.right_bumper;
+        pollenEnable = gamepad2.x;
+        pollenDisable = gamepad2.b;
+        nectarEnable = gamepad2.dpad_left;
+        nectarDisable = gamepad2.dpad_right;
+        pollenOpen = gamepad2.y;
+        pollenClose = gamepad2.a;
+        nectarOpen = gamepad2.dpad_up;
+        nectarClose = gamepad2.dpad_down;
+        flowerDeploy = gamepad1.dpad_down;
+        flowerLift = gamepad1.dpad_up;
 
         aimButton = gamepad1.a;
     }
@@ -135,16 +134,16 @@ public class MainTeleOp extends OpMode {
         DrivePowers powers = null;
         switch (driveMode) { //Switch based off of drivemode
             case ROBOT_CENTRIC:
-                drive.operate(lSY, lSX, rSX, rT);
+                drive.operate(strafeY, strafeX, pivotBot, brakeTrigger);
                 return; //This is so we can have pedro code below the switch statement that will not run if its set to normal robot centric
 
             case PEDRO_ROBOT_CENTRIC:
-                powers = new DrivePowers(-lSY, -lSX, -rSX);
+                powers = new DrivePowers(-strafeY, -strafeX, -pivotBot);
                 break;
 
             case PEDRO_FIELD_CENTRIC:
                 powers = ManualDrive.fieldCentric(
-                        -lSY, -lSX, -rSX,
+                        -strafeY, -strafeX, -pivotBot,
                         follower.pose().heading());
                 follower.manual(powers);
                 break;
