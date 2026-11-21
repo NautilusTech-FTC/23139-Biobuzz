@@ -8,11 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
 
-import android.text.Spannable;
-
-import org.firstinspires.ftc.teamcode.Methods.DriveTrain;
-import org.firstinspires.ftc.teamcode.Methods.Intake;
-import org.firstinspires.ftc.teamcode.Methods.PIDFShooter;
+import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.PIDFShooter;
 
 @TeleOp
 public class TunePIDF extends OpMode {

@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.Methods;
+package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Methods.PID.PIDF;
-import org.firstinspires.ftc.teamcode.Methods.PID.PIDFBackCalc;
+import org.firstinspires.ftc.teamcode.Subsystems.PID.PIDFBackCalc;
 
 public class BackCalcShooter {
     public PIDFBackCalc backCalc = new PIDFBackCalc(); //Public cuz tuning

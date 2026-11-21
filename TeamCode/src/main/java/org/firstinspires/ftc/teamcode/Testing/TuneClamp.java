@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
 
-import org.firstinspires.ftc.teamcode.Methods.DriveTrain;
-import org.firstinspires.ftc.teamcode.Methods.Intake;
-import org.firstinspires.ftc.teamcode.Methods.ClampShooter;
+import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.ClampShooter;
 
 @TeleOp
 public class TuneClamp extends OpMode {

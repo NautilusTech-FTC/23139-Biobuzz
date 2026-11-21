@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.Methods;
+package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Methods.PID.PIDFClamping;
+import org.firstinspires.ftc.teamcode.Subsystems.PID.PIDFClamping;
 
 public class ClampShooter {
     public PIDFClamping clamp = new PIDFClamping(); //Public cuz tuning

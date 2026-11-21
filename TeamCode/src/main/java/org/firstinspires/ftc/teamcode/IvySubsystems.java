@@ -8,10 +8,9 @@ import com.pedropathing.ivy.Command;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Methods.Flower;
-import org.firstinspires.ftc.teamcode.Methods.Intake;
-import org.firstinspires.ftc.teamcode.Methods.PIDFShooter;
-import org.firstinspires.ftc.teamcode.Methods.Shooter;
+import org.firstinspires.ftc.teamcode.Subsystems.Flower;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.PIDFShooter;
 
 public class IvySubsystems {
     private Flower flower;

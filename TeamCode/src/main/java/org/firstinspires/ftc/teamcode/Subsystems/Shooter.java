@@ -1,14 +1,10 @@
-package org.firstinspires.ftc.teamcode.Methods;
+package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Methods.PID.PIDF;
-
-public class PIDFShooter {
-    public PIDF pidf = new PIDF(); //Public cuz tuning
-
+public class Shooter {
     private final DcMotorEx shooter;
     private final Servo gate;
 
@@ -16,19 +12,15 @@ public class PIDFShooter {
     private double closeGate;
     private double openGate;
 
-    public PIDFShooter(HardwareMap hardwareMap,
-                   String shooter, String gate,
+    public Shooter(HardwareMap hardwareMap,
+                   String shooterMap, String gateMap,
                    DcMotorEx.RunMode runMode,
                    DcMotorEx.Direction direction) {
-        this.shooter = hardwareMap.get(DcMotorEx.class, shooter);
+        this.shooter = hardwareMap.get(DcMotorEx.class, shooterMap);
         this.shooter.setMode(runMode);
         this.shooter.setDirection(direction);
 
-        this.gate = hardwareMap.get(Servo.class, gate);
-    }
-
-    public void setTargetVelocity(double velocity) {
-        pidf.setTarget(velocity);
+        this.gate = hardwareMap.get(Servo.class, gateMap);
     }
 
     public void setCloseGate(double closePos) {
@@ -40,25 +32,19 @@ public class PIDFShooter {
     }
 
     public double getShooterVelocity() {
-        return shooter.getVelocity();
+        return(shooter.getVelocity());
     }
 
-    public void shoot(boolean start, boolean stop, double target) {
+    public void shoot(boolean start, boolean stop, double velocity) {
         if (start && !stop) {
-            pidf.setTarget(target);
+            shooter.setVelocity(velocity);
             shooterOn = true;
         }
 
         if (stop && !start) {
+            shooter.setVelocity(0);
             shooterOn = false;
         }
-
-        if (shooterOn) {
-            shooter.setPower(pidf.runPIDF(getShooterVelocity()));
-        } else {
-            shooter.setPower(0);
-        }
-
 
     }
 

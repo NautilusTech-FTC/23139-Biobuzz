@@ -17,10 +17,10 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
 
 import static org.firstinspires.ftc.teamcode.AprilTag.hiveTip;
 
-import org.firstinspires.ftc.teamcode.Methods.DriveTrain;
-import org.firstinspires.ftc.teamcode.Methods.Flower;
-import org.firstinspires.ftc.teamcode.Methods.Intake;
-import org.firstinspires.ftc.teamcode.Methods.PIDFShooter;
+import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.Subsystems.Flower;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.PIDFShooter;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @Configurable
@@ -150,8 +150,6 @@ public class MainTeleOp extends OpMode {
         }
 
         Pose pose = follower.pose();
-        //TODO: make this changed based off of team and hive position
-
 
         aprilTag.setHiveTip();
 

@@ -10,7 +10,7 @@ public class Robot {
 
     public enum startPositions {
         START_POS,
-        SHOOTOS
+        SHOOTPOS
     }
 
     public enum drives {
