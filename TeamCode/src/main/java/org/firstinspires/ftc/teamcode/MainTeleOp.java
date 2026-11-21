@@ -11,6 +11,7 @@ import com.pedropathing.follower.ManualDrive;
 import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*;
@@ -28,11 +29,12 @@ import org.firstinspires.ftc.teamcode.pedro.Constants;
 @TeleOp
 public class MainTeleOp extends OpMode {
     private DriveTrain drive;
-    private Intake intake;
-    private Intake transfer;
     private PIDFShooter shooterP;
     private PIDFShooter shooterN;
     private Flower flower;
+
+    private DcMotor intake;
+    private DcMotor transfer;
 
     private AprilTag aprilTag = new AprilTag();
 
@@ -42,16 +44,19 @@ public class MainTeleOp extends OpMode {
 
     double brakeTrigger;
     boolean intakeTrigger, outtakeTrigger;
-    boolean transInTrigger, transOutTrigger;
+    double transInTrigger, transOutTrigger;
 
-    boolean pollenEnable, pollenDisable, nectarEnable, nectarDisable, pollenOpen, pollenClose, nectarOpen, nectarClose;
+    boolean pollenToggle, pollenOn, nectarToggle,  nectarOn, pollenOpen, pollenClose, nectarOpen, nectarClose;
     boolean aimButton;
+    double pollenCooldown, nectarCooldown;
 
     boolean flowerDeploy;
     boolean flowerLift;
 
     public static double pollenV = 900;
     public static double nectarV = 940;
+
+    private double runTime;
 
     private Robot.drives driveMode = Robot.drives.PEDRO_ROBOT_CENTRIC;
     FieldManager field = PanelsField.INSTANCE.getField();
@@ -65,8 +70,9 @@ public class MainTeleOp extends OpMode {
                 "FrontLeft", "FrontRight", "BackRight", "BackLeft",
                 REVERSE, FORWARD, FORWARD, REVERSE);
 
-        intake = new Intake(hardwareMap, "IntakeMotor", FORWARD);
-        transfer = new Intake(hardwareMap, "TransferMotor", FORWARD);
+        intake = hardwareMap.get(DcMotor.class, "IntakeMotor");
+        transfer = hardwareMap.get(DcMotor.class, "TransferMotor");
+
         shooterP = new PIDFShooter(hardwareMap, "PollenMotor", "PollenGate", RUN_USING_ENCODER, REVERSE);
         shooterN = new PIDFShooter(hardwareMap, "NectarMotor", "NectarGate", RUN_USING_ENCODER, REVERSE);
         flower = new Flower(hardwareMap, "FlowerRamp", Servo.Direction.REVERSE);
@@ -78,6 +84,7 @@ public class MainTeleOp extends OpMode {
         shooterN.setCloseGate(0);
         shooterN.setOpenGate(0.02);
         shooterN.pidf.setPIDF(0.0012, 0, 0, 0.0004225);
+
         flower.setIntakeDown(0.6);
         flower.setIntakeUp(0);
 
@@ -100,12 +107,17 @@ public class MainTeleOp extends OpMode {
     @Override
     public void loop() {
         ctrlVars();
+        macrosAndToggles();
         drive();
 
-        intake.intake(intakeTrigger, outtakeTrigger);
-        transfer.intake(transInTrigger, transOutTrigger);
-        shooterP.shoot(pollenEnable, pollenDisable, pollenV);
-        shooterN.shoot(nectarEnable, nectarDisable, nectarV);
+        intake();
+        transfer();
+
+
+
+        shooterP.shoot(pollenOn, !pollenOn, pollenV);
+        shooterN.shoot(nectarOn, !nectarOn, nectarV);
+
         shooterP.ctrlGate(pollenOpen, pollenClose);
         shooterN.ctrlGate(nectarOpen, nectarClose);
         flower.lift(flowerDeploy, flowerLift);
@@ -118,21 +130,56 @@ public class MainTeleOp extends OpMode {
         brakeTrigger = gamepad1.right_trigger;
         intakeTrigger = gamepad1.left_bumper;
         outtakeTrigger = gamepad1.right_bumper;
-        transInTrigger = gamepad2.left_bumper;
-        transOutTrigger = gamepad2.right_bumper;
-        pollenEnable = gamepad2.x;
-        pollenDisable = gamepad2.b;
-        nectarEnable = gamepad2.dpad_left;
-        nectarDisable = gamepad2.dpad_right;
+        transInTrigger = gamepad2.left_trigger;
+        transOutTrigger = gamepad2.right_trigger;
+        pollenToggle = gamepad2.xWasPressed();
+        nectarToggle = gamepad2.dpadLeftWasPressed();
+        nectarOn = gamepad2.dpad_right;
         pollenOpen = gamepad2.y;
         pollenClose = gamepad2.a;
         nectarOpen = gamepad2.dpad_up;
         nectarClose = gamepad2.dpad_down;
         flowerDeploy = gamepad1.dpad_down;
         flowerLift = gamepad1.dpad_up;
-
         aimButton = gamepad1.a;
+
+        runTime = getRuntime();
     }
+
+    private void macrosAndToggles() {
+        if (pollenToggle & (pollenCooldown < runTime)) {
+            pollenCooldown = runTime + 0.25;
+
+            pollenOn = !pollenOn; //Toggle pollen
+
+            nectarOn = !pollenOn && nectarOn; //Turn nectar off if pollen is on
+            nectarClose = pollenOn; //Close nectar gate if pollen is on
+        }
+
+        if (nectarToggle & (nectarCooldown < runTime)) {
+            nectarCooldown = runTime + 0.25;
+
+            nectarOn = !nectarOn;
+
+            pollenOn = !nectarOn && pollenOn; //Turn pollen off if nectar is on
+            pollenClose = nectarOn; //Close pollen gate if nectar is on
+        }
+    }
+
+    private void intake() { //intake function
+        if (intakeTrigger) {
+            intake.setPower(1);
+        } else if (outtakeTrigger) {
+            intake.setPower(-0.25);
+        } else {
+            intake.setPower(0);
+        }
+    }
+
+    private void transfer() { //transfer function
+        transfer.setPower(transInTrigger-transOutTrigger);
+    }
+
 
     private void drive() {
         DrivePowers powers = null;
